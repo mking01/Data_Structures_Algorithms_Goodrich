@@ -1,0 +1,338 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2511
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica-Bold;\f1\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww11560\viewh9540\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\b\fs24 \cf0 Ch. 2 - OOP\
+\
+OOP Design Goals\
+
+\f1\b0 -objects: most frequently used \
+-each object is an instance of a class\
+-classes make things concise and consistent across all object types\
+-classes use instance variables and methods, also known as member functions\
+\
+-goals = robustness, adaptability, and reusability\
+\
+
+\f0\b Robustness
+\f1\b0 \
+-program produces the right output for all anticipated inputs\
+-capable of handling unexpected inputs not explicitly defined for its application\
+\
+
+\f0\b Adaptability\
+
+\f1\b0 -ability to evolve over time in response to changing conditions and needs\
+-most programs used for many years\
+-portability: ability to run software with minimal change on hardware and operating systems\
+\
+
+\f0\b Reusability\
+
+\f1\b0 -the same code should be a usable component of different systems in various applications\
+\
+
+\f0\b OOP Design Principles
+\f1\b0 \
+-modularity, abstraction, encapsulation\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-03-25 at 9.35.23 AM.png \width12980 \height4160 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\
+\
+
+\f0\b Modularity\
+
+\f1\b0 -different components of a software system are divided into separate functional units\
+-helps with organization and maintenance\
+-a module is a collection of closely related functions and classes defined together in a single file\
+\
+
+\f0\b Abstraction\
+
+\f1\b0 -distilling a complicated system down to its most fundamental parts\
+-abstract data types (ADT): a mathematical model of a data structure specific to the type of data stored\
+-specifies what each operation does but not how it does it\
+-public interface: set of behaviors supported by an ADT\
+-duck typing: treats abstractions implicitly; assume an object supports a set of known behaviors and the interpreter will raise a run-time error if those assumptions fail\
+-abstract base class (ABC): supports ADTs, cannot be instantiated but it defines 1+ common methods that all implementations of the abstraction must have\
+-realized by 1+ concrete classes that inherit from the ABC while providing implementations for those methods declared by the ABC\
+\
+
+\f0\b Encapsulation
+\f1\b0 \
+-different components of a software system should not reveal the internal details of their respective implementations\
+-advantage: gives 1 programmer freedom to implement component details without concern other programmers will write code depending on those internal component details\
+-helps software become robust and adaptable, s it allows the implementation details to change without affecting other parts\
+-makes it easier to fix bugs or add functionality\
+-internal functions start with an __ and should not be relied on, should be excluded from documentation\
+\
+
+\f0\b Design Patterns\
+
+\f1\b0 -design pattern: describes a solution to a typical software design problem, provides a general solution template\
+-describes main solution elements\
+-includes a name, a context, a template, and a result\
+-design patterns fall into two groups:  solving algorithms, solving software engineering problems\
+\
+-examples of both below, starting with algorithm solving:\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-03-25 at 9.49.15 AM.png \width13900 \height8140 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\
+\
+
+\f0\b Software Development
+\f1\b0 \
+-three major phases are design, implementation, testing and debugging\
+-design step is the most important phase\
+-rules of thumb to apply when designing classes:\
+	-responsibilities:  divide classes into actors, try to describe using action verbs\
+	-independence: MECE, subdivide class responsibilities so each has autonomy over some 			    program aspect\
+	-behaviors: define class behaviors carefully and precisely so the consequences of each action 		         will be understood by other classes that interact with it.  The behaviors will define 		         the methods the class performs.  Set of behaviors for the class are the interface to 		         the class.\
+-CRC cards:  class-responsibility-collaborator (CRC) are simple index cards that subdivide the work required of a program\
+-each card represents a component, which will ultimately become a class\
+-name on top, left-hand side = responsibilities for component, right-hand side = collaborators / other components it will have to interact with to perform its duties\
+-class diagram:  documents and explains the design use\
+-example for a credit card class:\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-03-25 at 10.01.02 AM.png \width12080 \height4820 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\
+\
+
+\f0\b Pseudo-Code
+\f1\b0 \
+-before implementing design, programmers describe steps and algorithms for humans only\
+-mix of language and code to describe the steps and ideas behind the program\
+\
+
+\f0\b Coding Style
+\f1\b0 \
+-PEP8 style guide\
+-use meaningful names for identifiers and choose names that reflect the action, responsibility, or data each identifier is naming\
+-class names should be nouns\
+-function names should be lowercase.  Separate multiple words with an underscore.  Should be the verb (calculate_sqrt)\
+-names that identify a parameter, instance, or local variable should be a lowercase noun\
+-identifiers representing constants should be capitalized (MAX_PRICE)\
+\
+
+\f0\b Documentation
+\f1\b0 \
+-docstring: formal documentation directly in source code, uses triple quotes (\'93\'94\'94)\
+\
+
+\f0\b Testing
+\f1\b0 \
+-programs tend to fail on special cases of the input\
+-need to be carefully identified and tested (e.g. sequence is empty, has only one element)\
+-the random module can be beneficial for testing your program on large amounts of randomly generated inputs\
+-two main testing strategies:\
+	1. Top-down: proceeds from top to bottom in the program hierarchy, used in conjunction with 			stubbing\
+	2. Bottom-up: proceeds from lower-level components to higher-level components, unit testing\
+\
+-regression testing: used in software maintenance, where all previous tests are re-executed tonsure changes to the software do not introduce new bugs in previously tested components\
+\
+
+\f0\b Debugging
+\f1\b0 \
+-use print statements to track variable values during program execution\
+-run the debugger, a specialized environment for controlling and monitoring program execution\
+-the debugger allows use of breakpoints, which stops code execution at specific points, allowing variables at that phase to be inspected\
+\
+
+\f0\b Class Definitions
+\f1\b0 \
+-member functions / methods: set of class behaviors to be used by all instances of that class\
+-the self identifier plays a key role.  It allows each instance to store its own variables to reflect its current state.\
+-it identifies the instance upon which a method is invoked\
+\
+
+\f0\b The Constructor
+\f1\b0 \
+-constructor: __init__, used to create a class instance, establishes the state of a new object with appropriate instance variables\
+\
+
+\f0\b Encapsulation
+\f1\b0 \
+-a single leading underscore for an attribute means it is nonpublic and those attributes should not be directly accessed\
+-provide accessors instead to provide read-only access to the trait p.72\
+-e.g. _balance, then adding a get_balance() function and accessing it that way\
+\
+-operator overloading: a + b adds int types but concatenates string types, must consider syntax when constructing a new class\
+\
+
+\f0\b Non-Operator Overloads\
+
+\f1\b0 -in addition to the traditional overloading above, Python relies on specially named methods to control other behavior\
+-similar special methods are used to determine how to construct ints, floats, strings, etc.\
+-see p.75 for common syntax and special method form alternatives\
+\
+
+\f0\b Implied Methods
+\f1\b0 \
+-if a particular special method is not implemented in a user-defined class, standard syntax will raise an exception\
+-e.g. evaluating a + b without __add__ will raise an error\
+-example on p.77\
+\
+
+\f0\b Iterators
+\f1\b0 \
+-iterators:  support a special method named __next__ that returns the next item in a collection or stops iterating if there are no more elements\
+-rare to directly implement an iterator class\
+-python providers automatic iterator implementation for classes that define both __len__ and __getitem__\
+\
+
+\f0\b Range Iterators
+\f1\b0 \
+-range is a class\
+-in Python 3, the class uses lazy evaluation\
+-lazy eval: rather than creating a new list instance, range is a class that can represent the range of elements without storing them explicitly in memory\
+\
+
+\f0\b Inheritance\
+
+\f1\b0 -hierarchical design helps organize software structural components\
+-subset, superset, \'93is a relationship\'94\
+-e.g. an apartment is a subset of a class of buildings, a building is a superset to a subset of apartments\
+-aka base class, parent class, or superclass (superset) vs. subclass or child class (subset)\
+-there are 2 ways a subclass can differentiate itself from its superclass:\
+	1. A subclass may specialize an existing behavior by overriding the existing method\
+	2. A subclass may extend its superclass by including new methods\
+\
+
+\f0\b Exception Hierarchy
+\f1\b0 \
+-BaseException class is the root of the hierarchy\
+-example:\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-03-25 at 12.38.41 PM.png \width14000 \height6480 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\
+-super().__init__(method1, method2, method3) calls on the methods inherited from the superclass and tags them in the subclass\
+-then use self._method for any new methods special to just the subclass\
+\
+-examples p.85-91\
+\
+
+\f0\b Abstract Base Classes\
+
+\f1\b0 -when defining a group of classes as part of an inheritance hierarchy, avoid repeating code through designing a base class with common functionality that can be inherited by other classes that need it\
+-abstract base class: only if its sole purpose is to serve as a base class through inheritance\
+-cannot be directly instantiated\
+-a concrete class CAN be directly instantiated\
+-example on p.94\
+\
+-metaclass:  provides a template for the class definition itself; assures the constructor for the class raises an error; is not a superclass\
+-decorators declare methods are abstract; no implementation provided within the sequence base class\
+-expect concrete subclasses to support the two methods\
+-Python disallows instantiation for any subclass that does not override the abstract methods with concrete implementations\
+\
+
+\f0\b Namespaces and Object-Orientation
+\f1\b0 \
+-namespace: abstraction that manages all identifiers defined in a particular scope, mapping each name to its associated value\
+-the \'93value\'94 associated with an identifier could be a function, class, or module\
+\
+
+\f0\b Instance and Class Namespaces
+\f1\b0 \
+-instance namespace: manages attributes specific to an individual object, e.g. each class instance\
+-class namespace: manages attributes specific to a class\
+-examples:\
+\
+\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-03-25 at 1.27.08 PM.png \width15020 \height7440 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\b \cf0 How Entries are Established in a Namespace
+\f1\b0 \
+-_balance is in the instance namespace, but make_payment is in the class namespace - why?\
+-_balance is established within the __init_method when a new instance is constructed\
+-self._balance is an identifier for the newly constructed instance\
+-self as a qualifier causes _balance to be added directly to the instance namespace\
+-because it\'92s within the init, it doesn\'92t live in the class space\
+-when inheritance is used, there is still a single instance namespace per object\
+-a class namespace includes all declarations made within the body of the class definition\
+\
+
+\f0\b Class Data Members
+\f1\b0 \
+-used when there is some value, like a constant, that is shared by all class instances\
+-in those cases, it\'92s wasteful to have each instance store the constant in its instance namespace\
+-example p. 98\
+-member entered into the subclass because constant assignment takes place in the immediate class definition scope without any qualifying identifier\
+\
+
+\f0\b Nested Classes
+\f1\b0 \
+-can nest one class definition within the scope of another class\
+-done using:\
+	class A:	    #outer class\
+		class B:  #nested class\
+-nesting one class in the scope of another makes it clear the nested class exists for support of the outer class\
+-linked lists are an example (node class stores individual list components)\
+-trees are an example (depend on their own nested node classes)\
+-they rely on different node definitions -> nesting avoids ambiguity\
+-it also allows for a more advanced form of inheritance where a subclass of the outclass overrides the definition of the nested class\
+\
+
+\f0\b Dictionaries and the __slots__ Declaration
+\f1\b0 \
+-python represents each namespace with a built-in dict class namespace by default\
+-the namespace maps identifying names in the scope to the associated objects\
+-downside: requires additional memory usage beyond the raw data it stores\
+-to sidestep this, use the streamlined representation for all instances of a class, the class definition must provide a class-level member named __slots__ that is assigned to a fixed sequence of strings serving as instance variable names\
+-ex. Class A:\
+	__slots__ = \'91_method1\'92, \'91_method2\'92, \'91_method3\'92\
+-the right hand side is technically a tuple\
+-such rigor is atypical for python programs, but can be helpful when using nested classes\
+\
+
+\f0\b Name Resolution and Dynamic Dispatch
+\f1\b0 \
+-this section examines the process used when retrieving a name in an OOP framework\
+-the interpreter takes the following steps to retrieve a name:\
+	1. The instance namespace is searched.  If found, that associated value is used.\
+	2. The class namespace is searched.  If found, that associated value is used.\
+	3. The search continues upward through the inheritance hierarchy, checking class, superclass, etc.\
+	4. If the name still has not been found, an AttributeError is raised.\
+-dynamic dispatch / dynamic binding: what python uses when implementing a function to call based upon the type of the object upon which it is invoked\
+-vs. Static dispatching, which makes compile-time decisions about which version to call\
+\
+
+\f0\b Shallow and Deep Copying
+\f1\b0 \
+-making a copy rather than an alias is necessary when you want to modify the original or the copy separately\
+-shallow copy:  new object created whose contents precisely match the original object contents \
+-referential: new list represents a sequence of references to the same elements as in the first\
+-e.g. palette = warm_tones is an alias, so modifying warm_tones later also updates palette even if you don\'92t want to\
+-palette = list(warm_tones) makes a copy so you can change palette without changing warm_tones\
+-deep copy: the new copy references its own copies of those objects referenced by the original version\
+\
+-the copy module can produce both shallow copies and deep copies of objects\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+}
