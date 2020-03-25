@@ -1,0 +1,524 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2511
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fswiss\fcharset0 Helvetica-Bold;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww11940\viewh12860\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 Ch.1 - Python Primer\
+\
+
+\f1\b Interpreter:
+\f0\b0 \
+-python is an interpreted language\
+-the interpreter executes the commands (receives, evaluates, then reports result)\
+-source code / script defines the commands for the interpreter in advance\
+-can be started by typing python from command line\
+-python then file name (file.py) to execute file in terminal\
+\
+-IDE = integrated development environment\
+\
+-GPA example to show a preview of a program\
+\
+-syntax relies on whitespace\
+-whitespace also key to delimit bodies of control structures\
+\
+
+\f1\b Objects:
+\f0\b0 \
+-classes form the basis for all data types\
+-built-in classes include int, float, and str\
+-assignment states explicitly set values for variables (e.g. temperature = 98.6)\
+-temperature also = identifier or name\
+\
+-identifiers are case-sensitive\
+-reserved words cannot be used as identifiers\
+-dynamically typed, so no advance declarations associating an identifier with a particular data type\
+-alias: assign by giving a second identifier to an existing object\
+-if the name is reassigned to a new value, it breaks the alias\
+- ex. temperature = temperature + 5\
+\
+
+\f1\b Instantiation:
+\f0\b0 \
+-creating a new instance of a class is called instantiation (ex. w = Widget(a, b, c))\
+-instances are instantiated through invoking the class constructor \
+-built-in classes support literal designations for new instances (e.g. temperature = 98.6 creates a new instance of the float class)\
+\
+
+\f1\b Calling Methods
+\f0\b0 \
+-Python\'92s classes may define one or more methods (known as member functions), which are invoked on a specific instance of a class using the dot (\'93.\'94) operator\
+-e.g. python\'92s list class has the sort method (e.g. list.sort())\
+-the expression to the left of the dot identifies the object on which the method is invoked\
+-can also use the dot operator to invoke a method on the immediate result of some other operation (e.g. list.sort().reverse())\
+-accessors: methods return information about the object state but don\'92t change the object (e.g. pd.describe())\
+-mutators / update methods: methods that change the object state (e.g. .sort())\
+\
+
+\f1\b Built-In Classes
+\f0\b0 \
+-immutable: class object that has a fixed value upon instantiation that can\'92t be changed\
+-built-in classes: bool (I), int (I), float (I), list, tuple (I), str (I), set, frozen set (I), dict\
+\
+
+\f1\b Bool Class
+\f0\b0 \
+-used to manipulate true/false logical values\
+-default returns false\
+-numbers evaluate to false if zero and true if nonzero\
+-sequences, strings, and lists evaluate to false if empty and true if nonempty\
+-often used as a condition in a control structure\
+\
+
+\f1\b Int Class
+\f0\b0 \
+-represents integer values where magnitude / precision is not important\
+-can represent integrals as binaries, octals, or hexadecimals by adding prefixes then characters to describe the base\
+-int() returns 0 by default\
+-if s represents a string int(s) can convert to the integral value (e.g. s=\'91137\'92, int(s) == 137)\
+\
+
+\f1\b Float Class
+\f0\b0 \
+-precise version of the int(), includes the decimal\
+-default returns 0.0\
+-if the parameter is a string, such as float(\'913.14\'92), it tries to parse as a floating-point value and raises a ValueError (because it wants to be infinitely precise beyond just the second place)\
+\
+
+\f1\b Sequence Types: list, tuple, str Classes
+\f0\b0 \
+-sequences types represent a collection of values where order is significant\
+-lists - order doesn\'92t matter\
+-tupes - immutable\
+-str - immutable\
+\
+
+\f1\b List Class
+\f0\b0 \
+-stores a sequence of objects\
+-referential structure:  stores a sequence of references to its elements\
+-they are array-based sequences and zero-indexed (a list of n elements indexes from 0 to n-1 inclusive)\
+-list() produces an empty list by default\
+-constructor will accept any parameter that is an iterable type\
+-list(\'91hello\'92) -> [\'91h\'92,\'92e\'92,\'92l\'92,\'92l\'92,\'92o\'92]\
+\
+
+\f1\b Tuple
+\f0\b0  
+\f1\b Class
+\f0\b0 \
+-immutable sequences\
+-() denotes tuples / an empty tuple\
+-to express a tuple with a length of one as a literal, a comma must be placed after the element but within the parentheses (e.g. (17,))\
+-(17) is just viewed as a parenthesized numeric)\
+\
+
+\f1\b Str Class
+\f0\b0 \
+-designed to represent character sequences\
+-characters are also indexed like lists\
+-can be enclosed in single or double quotes\
+-quote can be designated with a backslash as an escape character (e.g. \'93don\'92t\'94 vs. \'93don\\t\'94)\
+\
+
+\f1\b Set and Frozenset Classes\
+
+\f0\b0 -sets - collection with no duplicates and no order\
+-advantage: optimizes checking whether a specific element is there\
+-based on hash tables\
+-two restrictions:  \
+	1. No specific order \
+	2. Only immutable types can be added to sets\
+-frozenset: immutable form of the set type\
+-denoted by curly brackets - \{\}\
+\
+
+\f1\b Dict Class
+\f0\b0 \
+-represents a mapping from a set of distinct kets to a series of values\
+-e.g. ID numbers to student records\
+-also denoted by \{\}\
+-the constructor for the dict class accepts an existing mapping as a parameter, so it creates a new dictionary with identical associations as the existing one\
+-alternately, accepts key value pairs as a parameter\
+	-e.x. dict(pairs), pairs = [(ga, \'93Georgia\'94)]\
+\
+
+\f1\b Expressions, Operators, and Precedence\
+
+\f0\b0 -existing values can be combined into expressions using symbols and keywords known as operators\
+-compound expressions (e.g. a + b * c)\
+\
+
+\f1\b Logical Operators
+\f0\b0 \
+-and, or, not\
+-and and or operators short-circuit (do not evaluate the second term if the result can be determined based on the first)\
+-useful when constructing Boolean expressions in which we first test that a certain condition holds and then test a condition that otherwise could have generated an error\
+\
+
+\f1\b Equality Operators
+\f0\b0 \
+-two notions of equality (is equal, is not equal)\
+-represented by the following operators: is, is not, ==, !=\
+-a is b evaluates to True / a==b\
+-equivalence depends on the data type\
+-two strings are equivalent if characters of each are exact\
+-is and is not should be reserved for situations when you need to determine aliasing.  Rely primarily on == and !=\
+\
+
+\f1\b Comparison Operators
+\f0\b0 \
+-<, <=, >, >=\
+\
+
+\f1\b Arithmetic Operators
+\f0\b0 \
+-+, =, *, /, //, %\
+-// = integer only division\
+	-e.g. 27/4 = 6.75 vs. 27//4 = 6\
+\
+
+\f1\b Bitwise Operators
+\f0\b0 \
+~ = bitwise complement\
+& bitwise and\
+| bitwise or\
+^ bitwise exclusive - or\
+<< shift bits left, filling in with zeros\
+>> shift bits right, filling in with zeros\
+\
+
+\f1\b Sequence Operators\
+
+\f0\b0 -all sequence type built-ins support the following operator syntaxes:\
+\
+	-s[j]			element at index j\
+	-s[start:stop] 		slice including indices [start,stop]\
+	-s[start:stop:step] 	slice including indices [start, start + step, stop]\
+	-s+t			concatenation of sequences\
+	-k*s			shorthand for s + s + s + \'85.k times\
+	-val in s		containment check\
+	-val not in s		non-containment check\
+\
+-python supports negative indices, which denote a distance from the end of the sequence (index - 1 denotes the last element)\
+-slicing: subsequences of a sequence\
+-half-open intervals, start index is inclusive and stop index is exclusive\
+	-e.g. list[3:8] starts at the 4th item and returns it but stops at the 9th item and does not return it\
+	-(3, 4, 5, 6, 7)\
+\
+
+\f1\b Operators for Sets and Dictionaries\
+
+\f0\b0 -dict class does not support operators like < because it is not meaningful for them\
+-they do support the notice of equivalence (dict1 == dict2)\
+-most widely used dictionary behavior is accessing a value associated with a key (dict[key] returns value)\
+-supported operators:\
+\
+	-d[key]		value associated with given key\
+	-d[key] = value	set the value associated with a given key\
+	-del d[key]		remove key and associated value from dict\
+	-key in d		containment check\
+	-key not in d		non-containment check\
+	-d1 == d2		d1 is equivalent to d2\
+	-d1 != d2		d1 is not equivalent to d2\
+\
+
+\f1\b Extended Assignment Operators\
+
+\f0\b0 -usually used as shorthand for more verbose equivalents\
+	-e.g. temperature = temperature + 5 becomes temperature += 5\
+-for immutable types, it reassigns the identifier to a newly constructed value\
+\
+
+\f1\b Compound Expressions and Operator Precedence
+\f0\b0 \
+-dictates the order in which operators are computed and processed\
+-python allows chained assignment (x = y = 0) to assign multiple identifiers to the right value\
+-chaining also allowed for comparison operators (1 <= x + y <= 10)\
+-operator precedence:\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-03-24 at 2.17.38 PM.png \width11720 \height9060 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\
+
+\f1\b Control Flow\
+
+\f0\b0 -colon delimits the beginning of a block of code from the body of a control structure\
+\
+ 
+\f1\b Conditionals\
+
+\f0\b0 -if statements allow execution of a block of code based on run-time evaluation of boolean expressions\
+- e.g. if, elif, else: end\
+-can diagram logic as a traditional flowchart\
+-two looping constructs - a while loop allows general repetition while value is true or false\
+-for loop iterates values from a defined series\
+\
+
+\f1\b While Loops
+\f0\b0 \
+-while condition: body\
+\
+
+\f1\b For Loops\
+
+\f0\b0 -can be used with an iterable structure (list, tuple, string, set, dict, file)\
+-for element in iterable: body\
+\
+
+\f1\b Index-Based For Loops
+\f0\b0 \
+-limitation of a for loop is sometimes we do not know where an element resides in a sequence\
+-need knowledge of the index of the element (e.g. where is the maximum element in a list)\
+-rather than loop over every element, you can loop over every index instead\
+-range is your best friend for this (range(len(list))\
+\
+
+\f1\b Break and Continue Statements
+\f0\b0 \
+-break statements immediately terminate a while or for loop when executed within its body\
+-if applied in a nested control structure, it immediately terminates the most nested current loop\
+-for item in data: if item == X: true else break\
+\
+
+\f1\b Functions
+\f0\b0 \
+-functions: invoked without the context of a particular class or class instance\
+-method: a member function invoked on a specific object using OOP syntax (data.sort())\
+-def: signature of function\
+-body: remainder of the function definition, usually an indented block of code\
+-activation record: stores information relevant to the current call\
+-namespace: activation record that manages all identifiers with local scope within the current call\
+-return statements are used within the body to indicate a function should stop and give back that value\
+\
+
+\f1\b Information Passing
+\f0\b0 \
+-formal parameters: identifiers used to describe expected parameters\
+-actual parameters: objects sent by the caller when invoking the function\
+-assignment statement: parameter passing\
+-when a function is invoked, each identifier that serves as a formal parameter is assigned to the actual parameter provided by the caller\
+	e.g. file = pd.read_csv(file)\
+		\
+		def count(data):\
+			do something\
+			return data\
+\
+		file = count(file)\
+\
+-data = formal parameter\
+-file = actual parameter\
+\
+
+\f1\b Mutable Parameters\
+
+\f0\b0 -additional implications if the parameter is mutable\
+-formal param is alias for actual param\
+-purpose is to update elements in a parameter collection\
+\
+
+\f1\b Default Parameter Values
+\f0\b0 \
+-polymorphic: functions support more than one calling signature\
+-functions can declare 1+ default values for parameters\
+-this flexibility allows the caller to invoke a function with varying numbers of actual parameters\
+-e.g. def foo(a, b = 16, c = \'93hi\'94)\
+-can update if you want, if you don\'92t provide when you call the function the default will be used\
+-applies to some built in functions like range() as well\
+\
+
+\f1\b Keyword Parameters
+\f0\b0 \
+-positional arguments:  used to match formal parameters declared in the function signature with the actual parameters sent by the function call\
+-keyword argument: lets you explicitly specify\
+\
+
+\f1\b Built-In Functions
+\f0\b0 \
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-03-24 at 2.39.58 PM.png \width14480 \height15400 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\
+
+\f1\b Console Input and Output\
+
+\f0\b0 -print()\
+-input() allows users to enter info into the console\
+-reading from files\
+\
+
+\f1\b Exception Handling
+\f0\b0 \
+-exceptions / errors: unexpected circumstances raised / thrown by the code\
+-stop program execution\
+\
+
+\f1\b Common Exception Types\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\b0 \cf0 {{\NeXTGraphic Screen Shot 2020-03-24 at 2.48.07 PM.png \width13240 \height6840 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}
+\f1\b \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+
+\f0\b0 -value error: usually correct number and type of parameters are sent but the value is illegitimate within the function context\
+\
+
+\f1\b Raising an Exception\
+
+\f0\b0 -raise: executes the exception\
+-e.g. raise ValueError(\'91x cannot be negative\'92)\
+-if the exception is not caught within the function body, the function immediately stops\
+-it is customary to verify a parameter is of an appropriate type, then verify it has an appropriate value upon first executing a function\
+-e.g. def sqrt(x):\
+	if not isinstance(x, (int, float)):\
+		raise TypeError(\'91x must be numeric\'92)\
+	elif x < 0:\
+		raise ValueError(\'91x cannot be negative\'92)\
+\
+
+\f1\b Exception Handling
+\f0\b0 \
+-how much error-checking to perform is a matter of debate as it requires additional execution time and code complexity\
+-python also raises errors that are usually sufficiently informative to the caller\
+-recommends faster, simpler implementations performing minimal error-checking in most situations\
+\
+
+\f1\b Catching an Exception
+\f0\b0 \
+-goal is to avoid the possibility of an exception being raised through the use of a proactive conditional test\
+-e.g. if dividing two numbers, avoid a can\'92t divide by zero exception by adding an if y!=0, then\'85do something\
+-don\'92t spend time safeguarding against every possible exception case\
+-philosophy implemented using a try-except control structure\
+-e.g. for the divide by zero example:\
+	try:\
+		ratio = x / y\
+	except ZeroDivisionError:\
+		do something else\
+\
+-\'93try\'94 is the primary code to be executed\
+-following that block are \'93except\'94 cases with an identified error type and another control flow for those error cases\
+-best to use when the exceptional case is relatively unlikely or computationally expensive\
+\
+
+\f1\b More Exception Handling
+\f0\b0 \
+-especially useful when working with user input or reading or writing to files\
+-can use a tuple of error kinds in your except statement to catch multiple\
+-e.g. try: except(ValueError, TypeError):\
+-pass: statement that does nothing but can serve as a control structure body\
+-it catches the exception while allowing the loop to continue\
+-try statements can have finally clauses, with a body of code that will always execute in standard or exception cases\
+-typically used for critical cleanup work like closing an open file\
+\
+
+\f1\b Iterators and Generators
+\f0\b0 \
+-iterator: object that manages an iteration through a series of values.  If variable I identifies an iterator object, then each call to the built-in function, next(I), produces a subsequent element from the underlying series\
+-an iterable is an object that produces an iterator via the syntax iter(object)\
+-a list instance is an iterable but not an iterator\
+-I = iter(list) then creates an iterator object\
+-each call to next(I) then returns an element of that list\
+-the for-loop syntax just automates this process\
+\
+-generators: easiest way to create iterators\
+-instead of returning values, a yield statement is executed to indicate each element in the series\
+-e.g.:\
+\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-03-24 at 3.16.09 PM.png \width12900 \height6260 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\
+\
+-uses yield rather than return to indicate a result\
+-cannot combine yield and return statements in the same implementation\
+\
+
+\f1\b Additional Conveniences\
+
+\f0\b0 -if: else:\
+-list comprehensions: [expression for value in iterable if condition]\
+-if no closing parentheses are provided for a series, they are treated as a single tuple\
+	-e.g. data = 2, 4, 6, 7 becomes (2,4,6,8)\
+-called automatic packing\
+-python can automatically unpack a sequence, allowing one to assign a series of individual identifiers to the elements of a sequence\
+	-e.g. a, b, c, d = range(7, 11), where a is assigned 7, b = 8, c = 9, d = 10\
+-applies to iterating through dictionary elements too\
+	-e.g. for k, v in dict.items()\
+\
+
+\f1\b Simultaneous Assignments\
+
+\f0\b0 -simultaneous assignment: explicitly assigning a series of values to a series of identifiers\
+	-e.g. x, y, z = 6, 2, 5\
+\
+
+\f1\b Scopes and Namespaces\
+
+\f0\b0 -name resolution: determining the value associated with the identifier (you have to previously define variables to use them in an expression)\
+\
+
+\f1\b First-Class Objects
+\f0\b0 \
+-first-class objects: instances of a type that can be assigned to an identifier, passed as a parameter, or returned by a function (e.g. all our types)\
+\
+
+\f1\b Modules and the Import Statement
+\f0\b0 \
+-modules: additional python libraries\
+-imported: loading additional libraries into current namespace\
+-can use a general statement (import math)\
+-can import specific extensions (from math import pi, sort)\
+\
+
+\f1\b Creating a New Module\
+
+\f0\b0 -to create a new module, you just have to put relevant definitions in a .py file\
+-those functions can then be imported from any other .py file within the same project directory\
+-e.g. for the utility function earlier, save in utility.py\
+-then import via \'93from utility import count\'94\
+-often used to embed unit tests within a module\
+-modules relevant to data structures we\'92ve already discussed\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-03-24 at 3.28.03 PM.png \width12860 \height6240 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+
+\f1\b Pseudo-Random Number Generation
+\f0\b0 \
+-random generates pseudo-random numbers\
+-use seed() to ensure you can get the same randomized sequence again if you need it\
+-key methods:\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-03-24 at 3.29.21 PM.png \width12160 \height5940 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\
+\
+\
+\
+\
+\
+\
+\
+\
+}
