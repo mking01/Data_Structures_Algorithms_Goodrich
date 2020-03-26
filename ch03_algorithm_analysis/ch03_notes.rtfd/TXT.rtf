@@ -1,0 +1,355 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2511
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica-Bold;\f1\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\b\fs24 \cf0 Ch. 03 - Algorithm Analysis\
+
+\f1\b0 -data structure: systematic way of organizing and accessing data\
+-algorithm: step-by-step procedure for performing some task in a finite amount of time\
+-primary algorithm analysis tool involves characterizing run times of algorithms and data structure operations, with space usage also being of interest\
+-run time is influenced by input size, hardware environment (processor, memory, disk), and software environment (operating system, programming language)\
+-focusing on the relationship between run time and input size\
+\
+
+\f0\b Experimental Studies
+\f1\b0 \
+-simple approach to time and compare is this:\
+	from time import time\
+	start_time = time()\
+	run algorithm\
+	stop_time = time()\
+	elapsed = stop_time - start_time\
+	print(elapsed)\
+-elapsed time is not perfect because the program has to share CPU space with other processes, so it partially depends on everything else that is running simultaneously\
+-should do many iterations on multiple inputs\
+-goal is to develop an approach to analyzing algorithm efficiency that:\
+	1. Evaluates relative efficiency of any 2 algorithms independent from hardware and software\
+	2. Studies a high-level algorithm description without requiring implementation\
+	3. Considers all possible inputs\
+\
+
+\f0\b Counting Primitive Operations
+\f1\b0 \
+-to analyze run time without performing experiments, analyze high-level description\
+-primitive operations: set of algorithm steps\
+-examples:  assigning an identifier to an object, determining object associated with identifier, comparing two numbers, returning from a function\
+-typically corresponds to a low-level instruction with a constant execution time\
+-basic operation executed by hardware\
+-count how many primitive operations are executed, then use that number t as a measure of algorithm run time\
+-operation count correlates to an actual run time \'97> each operation corresponds to a constant number of instructions and there are only a fixed number of primitive operations\
+-assumption: primitive operation run times will be similar\
+\
+
+\f0\b Measuring Operations as a Function of Input Size
+\f1\b0 \
+-to capture the order of growth, each algorithm is associated with a function that characterizes the number of primitive operations performed as a function of input size n\
+\
+
+\f0\b Focusing on the Worst-Case Input
+\f1\b0 \
+-an algorithm may run faster on some inputs than it does on others of the same size\
+-run time may be expressed by a function of the input size averaged over all possible inputs of the same size\
+-aka average-case analysis\
+-this is challenging because you have to define the probability distribution of the set of inputs, which is usually pretty difficult\
+-generally characterize run times in terms of worst case, as a function of the input size, n\
+-much easier than average case analysis because you only have to identify the worst case rather than all possible cases\
+-this approach also leads to better algorithms\
+-if it does well on the worst input, it will do well on every input\
+\
+
+\f0\b The Constant Function
+\f1\b0 \
+-constant function: f(n) = c\
+-for some fixed constant, c, such as c = 5\
+-meaning for any argument n, the function pairs the value with c\
+-meaning regardless of the value of n, the output value is c\
+-useful because it characterizes the number of steps needed to do a basic operation like adding two numbers, assigning a variable a value, or comparing two numbers\
+\
+
+\f0\b The Logarithm Function
+\f1\b0 \
+-f(n) = log b n, for some constant, b > 1\
+- x = log b n if and only if b**x = n\
+- log b 1 = 0\
+-b = base of logarithm (subscript)\
+-most common base is 2 because computer store integers in binary and dividing in half is a common operation\
+-we\'92ll reduce to log n (assuming log n = log 2 n)\
+-ceiling: smallest integer greater than or equal to log n\
+-for positive integer, n, the ceiling is equal to the number of times n / b before n / b is <= 1\
+- e.g. log 3 27 = 3 because (((27/3)/3)/3) = 1\
+\
+
+\f0\b Logarithm Rules\
+
+\f1\b0 -given real numbers a > 0, b > 1, c > 0, and d> 1:\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-03-26 at 10.30.11 AM.png \width4600 \height2500 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+-examples:\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-03-26 at 10.31.05 AM.png \width7240 \height2780 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+
+\f0\b The Linear Function\
+
+\f1\b0 -f(n) = n\
+-given an input value n, the linear function outputs the same value, n\
+-used any time there is a basic operation for each of n elements\
+-e.g. comparing a number x to each element of a sequence of size n, yields n comparisons\
+-represents the best run time possible for any algorithm that processes each of n objects not already in memory\
+\
+
+\f0\b The N-Log-N Function
+\f1\b0 \
+-f(n) = n log n\
+-the function assigns to input n the value of n times the logarithm base two of n\
+-grows more rapidly than the linear function\
+-grows less rapidly than the quadratic function\
+-we prefer this to an algorithm with a quadratic run time\
+-common for sorting algorithms\
+\
+
+\f0\b The Quadratic Function\
+
+\f1\b0 -f(n) = n**2\
+-given an input value n, the function assigns the product of n with n squared\
+-appears in algorithms with nested loops\
+-e..g the inner loop performs a number of linear operations and the outer loop is performed a linear number of times\
+-in those cases you have n * n, so n ** 2 operations\
+\
+
+\f0\b Nested Loops and the Quadratic Function
+\f1\b0 \
+-quadratic function can also surface in the context of nested loops where the first iteration uses 1 operation, the second uses 2, and so on\
+-e.g. 1 + 2 + 3 + \'85 + (n -2) + (n - 1) + n\
+-aka total # of operations performed by the nested loop if the number of operations increases by one with each outer loop iteration\
+-takeaway: if we perform an algorithm with nested loops so that the operations of the inner loop increase by one each time, the total number of operations is quadratic in the number of times, n, we perform the outer loop\
+-n**2 / 2 + n / 2\
+\
+
+\f0\b The Cubic Function
+\f1\b0 \
+-cubic function: f(n) = n ** 3\
+-assigns the input, n, to itself 3 times\
+-not frequently occurring\
+\
+
+\f0\b Polynomials
+\f1\b0 \
+-polynomial function: f(n) = a0 + a1n + a2n**2 + a3n**3 \'85\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-03-26 at 10.54.15 AM.png \width11900 \height2520 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+-e.g. f(n) = 2 + 5n + n**2\
+        f(n) = 1 + n**3\
+        \'85and everything else discussed above (f(n) = 1, f(n) = n, f(n) = n**2)\
+\
+-run times of polynomials with small degree are better than run times with larger degrees\
+\
+
+\f0\b Summations
+\f1\b0 \
+-formula:\
+{{\NeXTGraphic Screen Shot 2020-03-26 at 10.57.12 AM.png \width7640 \height1520 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\
+-where a and b are integers and a <= b\
+-shorthand way of expressing sums of increasing terms with a regular structure\
+\
+
+\f0\b Exponential Function
+\f1\b0 \
+-f(n) = b ** n\
+-where b is a positive constant, called the base, and n is the exponent\
+-f(n) assigns the input argument n the value obtained by multiplying the base by itself n times\
+-the most common base is b = 2\
+-exponent rules (assumes a, b, and c are positive):\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-03-26 at 11.00.20 AM.png \width2740 \height1300 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\
+\
+-can extend to exponents that are fractions or real numbers and to negative exponents\
+\
+
+\f0\b Geometric Sums
+\f1\b0 \
+-geometric summations: loops where each iteration takes a multiplicative factor longer than the previous one\
+-for any integer n >= 0 and any real number a such that a > 0 and a != 1, \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-03-26 at 11.07.55 AM.png \width1720 \height1080 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf0 \
+\
+
+\f0\b Comparable Growth Rates
+\f1\b0 \
+-in order the 7 common functions:\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-03-26 at 11.23.29 AM.png \width11720 \height1340 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf0 \
+-growth rates in run times:\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-03-26 at 11.24.05 AM.png \width12500 \height5560 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf0 \
+
+\f0\b Asymptotic Analysis\
+
+\f1\b0 -it\'92s often enough to know the run time of an algorithm grows proportionally to n\
+-map the size of the input n to values that correspond to the main factor that determines the growth rate in terms of n\
+-can analyze the algorithm by estimating the number of primitive operations executed up to a constant factor\
+\
+
+\f0\b \'93Big Oh\'94 Notation
+\f1\b0 \
+-f(n) and g(n) are functions mapping positive integers to positive real numbers\
+-f(n) is O(g(n)) if there is a constant, c > 0, and an integer constant, n0>=1, such that:\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-03-26 at 11.38.58 AM.png \width4080 \height660 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf0 \
+-aka big O\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-03-26 at 11.40.04 AM.png \width8900 \height6520 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf0 -shows relationship between growth in f(n) and growth in g(n)\
+-asymptotic comes into play in the sense they both grow toward infinity\
+-can alternately say f(n) is order of g(n)\
+-alternately can say f(n) is O(g(n))\
+\
+-the highest degree term in a polynomial determines the asymptotic growth rate of that polynomial\
+-we should strive to describe the function in simplest terms\
+-always pick the worst case term to describe the algorithm runtime\
+- e.g. 4n**2 + n log n = O(n**2) time, quadratic, even though it has an n log n term\
+\
+
+\f0\b Big Omega
+\f1\b0 \
+-allows us to say a function grows at a rate greater than or equal to that of another\
+-f(n) >= cg(n) for n >= n0\
+\
+
+\f0\b Big Theta
+\f1\b0 \
+-allows us to say two functions grow at the same rate, up to constant factors\
+-c\'92g(n) <= f(n) <= c\'92\'92g(n) for n >= n0\
+\
+
+\f0\b Comparative Analysis
+\f1\b0 \
+-can use big O notation to order classes of functions by asymptotic growth rate\
+-functions ordered by increasing growth rate:  1, log n, n, n log n, n**2, n**3, 2**n\
+-example:\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-03-26 at 12.04.27 PM.png \width9320 \height3320 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf0 \
+\
+
+\f0\b Constant Time Operations
+\f1\b0 \
+-lists are implemented as array-based sequences, allowing elements to be stored in a consecutive memory block\
+-the jth element can be found by validating the index and using it to access the underlying array\
+-data[j] is evaluated in O(1) time \'97> computer supports constant-time access based on its memory address\
+\
+
+\f0\b Revisiting the Problem of Finding the Maximum of a Sequence
+\f1\b0 \
+-initialization uses O(1) time\
+-return statement uses O(1) time\
+-iteration through each element is O(n) time, so the max worst case is O(n) time\
+\
+
+\f0\b Prefix Averages
+\f1\b0 \
+-prefix averages: find the average of a list\
+	-given sequence S consisting of n numbers, compute a sequence A such that A[j] is the avg of 	elements in S\
+\
+
+\f0\b Quadratic-Time Algorithm Example for Prefix Averages\
+
+\f1\b0 p. 132\
+\
+
+\f0\b Linear-Time Algorithm
+\f1\b0 \
+p. 133\
+\
+
+\f0\b Three-Way Set Disjointness
+\f1\b0 \
+-three-way set disjointness: determine if the intersection of three sequences is empty (no element common to all three)\
+-v. on p.134 and improved version on p.135\
+-goes from O(n**3) to O(n**2)\
+\
+
+\f0\b Element Uniqueness
+\f1\b0 \
+-element uniqueness problem: determine if all elements in a sequence are unique\
+-again two versions, p. 135 and 136, the second version sorts while the first does not\
+-sorting guarantees duplicate elements are placed next to each other, so then all you have to do is 1 pass rather than 2 looking for consecutive duplicates\
+-transforms from O(n**2) time to O(n log n) time\
+\
+
+\f0\b Justification Techniques
+\f1\b0 \
+-proving claims about statements\
+-can do so by providing a counterexample\
+-can do so by providing a contrapositive or a contradiction\
+-contrapositive: if p is true, then q is true / if q is not true, then p is not true\
+-DeMorgan\'92s Law: helps deal with negations\
+-contradiction: also uses DeMorgan\'92s Law, establishes that statement q is true by supposing q is false and showing this assumption does not hold up\
+-induction: for any particular n>= 1, there is a finite sequence of implications that starts with something known tone true and leads to showing q(n) is true, then justify that step\
+-loop invariants: to prove some statement about a loop is correct, define the loop in terms of a series of smaller statements where:\
+	1. The initial claim is true before the loop begins\
+	2. If Lj - 1 is true before iteration j, then Lj will be true after iteration j.\
+	3. The final statement, Lk, implies the desired statement L to be true.\
+-example on p. 140\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+}
