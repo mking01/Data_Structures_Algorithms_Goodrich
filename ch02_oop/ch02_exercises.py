@@ -139,9 +139,9 @@
 #         else:
 #             return ValueError, print("Negative payments not allowed.")
 
-#mk_card = CreditCard('Molly King', 'BOA', 55555, 1000000000)
-#print(mk_card.make_payment(.01))
-#print(mk_card.make_payment(-1000))
+# mk_card = CreditCard('Molly King', 'BOA', 55555, 1000000000)
+# print(mk_card.make_payment(.01))
+# print(mk_card.make_payment(-1000))
 
 # 10. Implement the __neg__ method for the Vector class so the expression -v returns a new vector instance whose
 # coordinates are all negated values of the respective coordinates of v.
@@ -229,7 +229,7 @@
 # print(v_test*3)
 
 # 16.  Our Range class depends on the formula max(0, (stop - start + step - 1) // step) to compute the number of
-# range elements.  It is not immediately evident this formula provides a correct calulcation.  Justify this formula
+# range elements.  It is not immediately evident this formula provides a correct calculation.  Justify this formula
 # in your own words.
 # class Range:
 #     def __init__(self, start, stop=None, step=1):
@@ -256,13 +256,24 @@
 #
 #         return self._start + k * self._step
 
+# This is correct because to calculate the length, it looks in all the values of the list and takes the largest one.
+# This is done through starting at zero, then finding the difference between the end and the beginning, then adding
+# the step / increment level.  One is then subtracted because python starts its first place indexing at 0 but the
+# starting position is likely 1 to indicate the first position. The integer of this number divided by step is then
+# returned. If this number is larger than zero, it is returned as the max length.
+
 # 20.  What are some potential efficiency disadvantages of having very deep inheritance trees, that is, a large set
 # of classes, A, B, C, and so on, so that B extends A, C extends B, D extends C?
 
+# If behavior changes in A without D knowing, could be hard to figure out where the problem is.  Potential for
+# namespace conflicts (C references something B doesn't know about).
 
 # 21.  What are some potential efficiency disadvantages of having very shallow inheritance trees, that is,
 # a large set of classes, A, B, C, and so on, such that all these classes extend a single class, Z?
 
+# Risks incorrect aliasing.  Also if the two are exact copies but you change one and not the other, then there is
+# either a need to duplicate work to change the second object to match or you also risk not updating both places
+# correctly.  If any classes change, it will mess up the subclass.  Also namespace conflicts.
 
 # 22. Modify the Sequence class to include a definition for the __eq__ method so that expression seq1 == seq2 will
 # return True when the two sequences are element by element equivalent.
@@ -280,57 +291,40 @@
 #
 #     def __iter__(self):
 #         return self
+#
+#     def __eq__(self, other_seq):
+#         if self._seq == other_seq:
+#             return True
+#         else:
+#             print("Sequences are not equal")
+#             return False
+#
+#
+# seq1 = SequenceIterator(sequence=[1, 2, 3, 4, 5])
+# print(seq1 == [1, 2, 3, 4, 5])
+# print(seq1 == [1, 1, 1, 1, 1])
 
 # Creativity
-# 25. # 12 uses the __mul__ method to support multiplying a Vector by a number.  Give a single
-# implementation of Vector.__mul__ that uses run-time type checking to support u* v and 8 * k where u and v designate
-# vector instances and k represents a number.
-# class Vector:
-#     def __init__(self, d):
-#         self._coords = [0] * d
-#
-#     def __len__(self):
-#         return len(self._coords)
-#
-#     def __getitem__(self, j):
-#         return self._coords[j]
-#
-#     def __setitem__(self, j, val):
-#         self._coords[j] = val
-#
-#     def __add__(self, other):
-#         if len(self) != len(other):
-#             raise ValueError('dimensions must agree')
-#         result = Vector(len(self))
-#         for j in range(len(self)):
-#             result[j] = self[j] + other[j]
-#         return result
-#
-#     def __eq__(self, other):
-#         return self._coords == other._coords
-#
-#     def __ne__(self, other):
-#         return not self == other
-#
-#     def __str__(self):
-#         return '<' + str(self._coords)[1:-1] + '>'
-
 # 26.  SequenceIterator provides a forward iterator.  Implement a class named ReversedSequenceIterator that serves as
 # a reverse iterator for any sequence type.  First call returns last element and so on.
-# class SequenceIterator:
+# class ReversedSequenceIterator:
 #     def __init__(self, sequence):
 #         self._seq = sequence
-#         self._k = -1
+#         self._max_count = len(self._seq)
 #
 #     def __next__(self):
-#         self._k += 1
-#         if self._k < len(self._seq):
-#             return (self._seq[self._k])
+#         self._max_count -= 1
+#         if self._max_count > -1:
+#             return (self._seq[self._max_count])
 #         else:
 #             raise StopIteration()
 #
 #     def __iter__(self):
 #         return self
+#
+#
+# seq1 = ReversedSequenceIterator(sequence=[1, 2, 3, 4, 5])
+# print([x for x in seq1])
 
 # 28.  Modify PredatoryCreditCard so once a customer has made ten calls to charge in the current month,
 # each additional call results in an additional $1 surcharge.
