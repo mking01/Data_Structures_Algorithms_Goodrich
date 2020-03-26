@@ -1,5 +1,10 @@
+### Purpose
+My goal is to gain expertise in developing and using Python data structures and algorithms.  Topics include OOP, algorithm analysis, recursion, array-based sequences, linked lists, trees, priority queues, hash tables, sorting and selection, text processing, graph algorithms, and memory management.
+
+### Acknowledgements
 ** Source code forked from here:  https://github.com/mjwestcott/Goodrich.  Many thanks!
 
+### Copyright Information
 Copyright 2013, Michael H. Goldwasser
 
 Developed for use with the book:
