@@ -1,0 +1,359 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2511
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica-Bold;\f1\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\b\fs24 \cf0 Ch. 5 - Array-Based Sequences
+\f1\b0 \
+\
+
+\f0\b Sequence Types\
+
+\f1\b0 -sequence classes: list, tuple, and str (built-in)\
+-each type supports indexing to access a single element\
+-each type represents their sequences using arrays\
+\
+
+\f0\b Low-Level Arrays\
+
+\f1\b0 -low-level computer architecture understanding required to describe how Python represents sequence types\
+-primary memory is composed of bits\
+-bits are grouped into larger units, called bytes\
+-computer keeps track of information stored in each byte via an abstraction known as a memory address\
+-hardware is designed so any byte of memory can be efficiently accessed based on its memory address\
+-random access memory (RAM): it\'92s just as easy for the computer to retrieve byte #309 as it is byte #1\
+-any individual memory byte can be stored or retrieved in O(1) time\
+-array: a group of related variables can be stored sequentially in a contiguous portion of the computer\'92s memory (e.g. top 10 video game scores in 1 object vs. 10 separate variables stored 10 separate places)\
+-each character represented using Unicode\
+-cell: each location within an array\
+-index: cell location within an array\
+\
+
+\f0\b Referential Arrays
+\f1\b0 \
+-references: internal storage mechanism Python uses to represent a list or tuple instance\
+-at the lowest level, what\'92s stored is a consecutive sequence of memory addresses where the sequence elements reside\
+-useful because individual element size may vary between cells\
+-relative element size may vary but the number of bits used to store the memory address of each element is fixed\
+-lists and tuples are referential structures\
+-this is significant because a single list instance may include multiple references to the same object as elements of the list\
+-it\'92s possible for a single object to be an element of two or more lists\
+-those lists simply store references back to that object\
+-e.g. when you compute a slice of a list, the result is a new list but the new list references the same elements in the original list\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-03-27 at 9.57.40 AM.png \width7740 \height3620 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+-same concept when making a new list as a copy of an existing one; produces a new list that is a shallow copy (references the same elements as the first list)\
+-if the contents of the first list were mutable, a deep copy can be produced (a new list with new elements)\
+-if the first list is immutable, not needed\
+\
+-.extend() is used to add all elements of one list to the end of another list\
+-the extended list does not receive copies of those elements - it receives references to those elements\
+\
+
+\f0\b Compact Python Arrays
+\f1\b0 \
+-strings represented using an array of characters, not an array of references\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 -compact array: more direct representation where the array stores bits that represent the primary data (if strings, characters)\
+-compact array advantages:\
+	1. Lower memory usage (no overhead devoted to explicit storage)\
+	2. Primary data are stored consecutively in memory\
+		-even though a list maintains careful ordering of sequence memory addresses, where 		those elements live is not determined by the list\
+		-nice to have data stored in memory near other data used for the same computations\
+-the array module is the main support for compact arrays\
+-type code: character designating the data type stored in the array\
+-required by the array class constructor\
+-all codes:\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-03-27 at 10.08.33 AM.png \width8420 \height5640 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+-type code allows the interpreter to determine how many bits are needed per array element\
+-array module does not support making compact arrays of user-defined data types\
+\
+
+\f0\b Dynamic Arrays and Amortization
+\f1\b0 \
+-an array cannot be increased by expanding into subsequent cells\
+-the precise array size must be explicitly declared for the computer to allocate the right amount of consecutive memory from storage\
+-the list class is more interesting because it relies on a dynamic array\
+-can add elements to a list with no limit on overall capacity\
+-a list instance maintains an underlying array that often has greater capacity than the current list length\
+-while a user may have created a list with five elements, the system may have reserved an underlying array capable of storing 8 references \'97> the extra capacity makes it easy to append items\
+-eventually if enough items are appended, reserved capacity will be exhausted\
+-when that happens, the class requests a new, larger array from the system and initializes a new array so it matches that of the existing smaller array\
+-then, the old array is no longer needed so it is reclaimed by the system\
+\
+
+\f0\b Implementing a Dynamic Array\
+
+\f1\b0 -the key is to provide means to grow the array A that stores the elements of a list\
+-if an element is happened to a list when the underlying array is full, do the following:\
+	1. Allocate a new array B with larger capacity\
+	2. Set B[I] = A[I] for I = 0,\'85., n-1 where n = number of items\
+	3. Set A = B\
+	4. Insert new element in the new array (B)\
+\
+-visual:\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-03-27 at 10.28.07 AM.png \width11860 \height2360 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\
+-usually the new array has twice the capacity of the existing array that was filled\
+\
+
+\f0\b Amortized Analysis of Dynamic Arrays
+\f1\b0 \
+-by doubling the capacity during an array replacement, the new array allows the addition of n new elements before replacing again\
+-this allows many simple append operations before making a new expensive operation (replacing the array)\
+-this means it is efficient in terms of total run time\
+-amortization: design pattern showing that performing a sequence of append operations on a dynamic array is efficient\
+-amortized analysis: use an accounting technique where the computer is a coin-operated appliance requiring the payment of one cyber-dollar for a constant amount of computing time\
+-when an operation is executed, there should be enough cyber-dollars available to pay for the operation\'92s run time\
+-thus, total amount of cyber dollars spent for any computation will be proportional to the total time spent on that computation\
+-can overcharge some operations to save up to pay for others\
+\
+
+\f0\b Geometric Capacity Increase
+\f1\b0 \
+-the proof relies on the array doubling with each expansion\
+-but the O(1) amortized bound per operation can be proven for any geometrically increasing progression of array sizes\
+-when choosing the geometric base, there\'92s a tradeoff between run-time efficiency and memory usage\
+-with a base of 2, if the last insertion causes a resize event, the array ends up twice as large as it needs to be\
+-if you increase the array by only 25% of its current size, you don\'92t risk wasting as much memory at the end but there will be more intermediate resize events along the way\
+-the key to the performance is the amount of additional space is proportional to the current array size\
+\
+
+\f0\b Beware Arithmetic Progression
+\f1\b0 \
+-don\'92t reserve a constant number of additional cells upon each resize\
+-even if you\'92re worried about reserving too much space at once\
+-the performance is significantly worse\
+\
+
+\f0\b Memory Usage and Array Shrinking
+\f1\b0 \
+-consequence of the geometric increase rule: the final array size is guaranteed to be proportional to the overall number of elements\
+-the data structure uses O(n) memory, which is desirable\
+-if a container, like a list, provides operations causing the removal of one or more elements, must take care to ensure a dynamic array has O(n) memory usage\
+-repeated insertions may cause the underlying array to grow arbitrarily large\
+-no longer a proportional relationship between the number of elements and the array capacity after many elements are removed\
+-a robust implementation will shrink the underlying array occasionally while maintaining the O(1) amortized bound on individual operations\
+-should also make sure the structure is not rapidly changing between growing and shrinking the underlying array\
+-half array capacity whenever the total element umber falls below 1/4 of capacity\
+-guarantees array capacity is at most 4x the number of elements\
+\
+
+\f0\b List Class
+\f1\b0 \
+-list class uses dynamic arrays, but is not using pure geometric or pure arithmetic progression\
+-the append method does exhibit amortized constant-time behavior\
+-higher average cost for smaller data appends\
+\
+
+\f0\b List and Tuple Class Efficiency
+\f1\b0 \
+-nonmutating list class behaviors are supported by the tuple class\
+-tuples are more memory efficient than lists because they are immutable \'97> no need for an underlying dynamic array\
+-example of run time efficiency for operations:\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-03-27 at 10.53.11 AM.png \width7520 \height5260 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\
+
+\f0\b Constant-Time Operations
+\f1\b0 \
+-instance length returned in constant time because an instance explicitly maintains such state information\
+\
+
+\f0\b Searching for Occurrences of a Value
+\f1\b0 \
+-count, index, __contains__ iterate left to right through a sequence\
+-count always examines all n elements of a sequence\
+-index and __contains__ examine n elements in the worst case but are otherwise faster\
+-because they immediately exit when they find the leftmost occurrence of the desired value\
+\
+
+\f0\b Lexicographic Comparisons
+\f1\b0 \
+-in the worst case, evaluating 2 sequences requires an iteration that takes time proportional to the length of the shorter of the two sequences\
+-in some cases, it can be evaluated more efficiently (could stop after the second item doesn\'92t match without having to compare all items)\
+\
+
+\f0\b Creating New Instances
+\f1\b0 \
+-constructing a new instance based on 1+ existing instances depends on the construction and initialization of the new result\
+-asymptotic behavior is proportional to the length of the result\
+-if there\'92s more elements, it takes longer to create - tl/dr\
+\
+
+\f0\b Mutating Behaviors
+\f1\b0 \
+-efficiency of mutating behaviors:\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-03-27 at 10.57.29 AM.png \width6280 \height6040 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\b \cf0 Adding Elements to a List
+\f1\b0 \
+-in addition to append, lists support .insert(k, value), which inserts an element at a specific index and shifts all subsequent elements to the right one place\
+-two complicating factors in analyzing the efficiency:\
+	1. The addition of one element may require resizing the dynamic array\
+	2. Shifting the elements to make room for the new item \'97> time required depends on the 	index of the new element and thus the other elements that require shifting\
+\
+
+\f0\b Removing Elements from a List\
+
+\f1\b0 -pop() removes the last list element\
+-this is most efficient because all other elements stay in the same location\
+-pop(k) \'97-> efficiency is O(n-k), the amount of shifting depends on the choice of k\
+-remove() allows the caller to specify the value to remove rather than the index\
+-it removes only the first occurrence of such a value from a list or raises a ValueError if no value is found\
+-there is no efficient case for remove\
+\
+
+\f0\b List Extension\
+
+\f1\b0 -.extend() adds multiple elements to a list\
+-run time is proportional to the length of the other list and amortized because the underlying array for the first list may be resized to accommodate the additional elements\
+-extend() is preferable to repeated calls to append() because the constant factors are significantly smaller\
+-there are 3 efficiency benefits:\
+	1. There is always an advantage to using the appropriate python method because they\'92re 	implemented natively in a compiled language\
+	2. There is less overhead to a single function call that accomplishes the work vs. many 	individual calls\
+	3. Increased efficiency comes because the resulting size of the updated list can be calculated 	in advance\
+\
+
+\f0\b Constructing New Lists
+\f1\b0 \
+-can create new lists several ways, but in almost all cases, the efficiency behavior is linear in the length of the list that is created\
+-list comprehension - is significantly faster than building a list by appending\
+-also common to initialize a list of all 0s like [0] * n\
+-is succinct and more efficient than building incrementally\
+\
+
+\f0\b String Class
+\f1\b0 \
+-methods that require a new string require linear time the length of the string that is produced\
+-most test boolean string conditions is also linear o(n) time in the worst case, but can short circuit upon the first False\
+\
+
+\f0\b Pattern Matching\
+
+\f1\b0 -more interesting behaviors are ones that rely on finding a string pattern within a larger string, like __contains__, find, index, count, replace, and split\
+-pattern matching: O(mn) time because it\'92s n - m + 1 possible starting indices for the pattern for 2 strings\
+\
+
+\f0\b Composing Strings
+\f1\b0 \
+-reference counts:  python interpreter maintains counts to determine if an object can be garbage collected / provides a means to detect when no other references to a string exist\
+-\'91\'92.join([c for c in string if c.isalpha()]) is much more efficient than using an iterative list (for c in string, if c.isalpha():, temp.append(c))\
+\
+
+\f0\b The Insertion-Sort Algorithm
+\f1\b0 \
+-insertion-sort: Start with the first element in the array.  One element by itself is already sorted.  Consider the next element.  If it\'92s smaller than the first, swap it.  Repeat until the whole array is sorted.\
+-the task of inserting a new entry into the list of high scores is almost identical to the task of inserting a newly considered element in insertion-sort\
+-uses a nested loop, which leads to an O(n**2) run time in the worst case\
+-example:\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-03-27 at 11.36.26 AM.png \width12140 \height10900 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\
+
+\f0\b Simple Cryptography\
+
+\f1\b0 -encryption: takes plaintext, converts it to scrambled ciphertext\
+-decryption: takes ciphertext, converts it back to plaintext\
+-Caesar cipher: earliest encryption scheme, Caesar used it to protect important military messages\
+-replaces each letter in a message with the letter that is a certain number of letters after it in the alphabet\
+-wrap around: x replaces a, y replaces b, and so on\
+\
+
+\f0\b Converting Between Strings and Character Lists
+\f1\b0 \
+-strings are immutable so an instance cannot be directly edited to encrypt it\
+-goal: generate a new string\
+-technique: create an equivalent list of characters, edit the list, then reassemble a new string based on the list\
+-e.g. (\'91bird\'92) becomes [\'91b\'92, \'91I\'92, \'91r\'92, \'91d\'92] which becomes \'91\'92.join([\'91b\'92,\'92I\'92,\'92r\'92,\'92d\'92]) resulting in \'91bird\'92\
+\
+
+\f0\b Use Characters as Array Indices
+\f1\b0 \
+-modulo operator: returns remainder after performing integer division\
+\
+
+\f0\b Multidimensional Data Sets
+\f1\b0 \
+-lists, tuples and strings are one-dimensional\
+-many computer applications involve multidimensional sets\
+-matrix: two-dimensional array\
+-a common representation is a list of lists, where each row in a matrix is a list\
+\
+
+\f0\b Constructing a Multidimensional List\
+
+\f1\b0 -to quickly initialize a one-dimensional list, rely on syntax like data = [0] * n to create a list of n zeroes\
+-have to be careful when creating a list of lists\
+-for this, use the syntax: data = [[0] * c for j in range(r)] where c = columns and r = rows\
+-this syntax ensures each cell of the primary list refers to an independent instance of a secondary list\
+\
+
+\f0\b Two-Dimensional Arrays and Positional Games
+\f1\b0 \
+-positional games: list of lists is ideal for these software programming goals\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\
+\
+\
+\
+\
+\
+\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\
+\
+\
+\
+\
+\
+\
+\
+\
+}
