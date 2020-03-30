@@ -1,0 +1,314 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2511
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica-Bold;\f1\fswiss\fcharset0 Helvetica;\f2\froman\fcharset0 Times-Roman;
+}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue233;}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c93333;}
+\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\b\fs24 \cf0 Ch. 9 - Priority Queues
+\f1\b0 \
+\
+
+\f0\b Priority Queue ADT
+\f1\b0 \
+-priority queue: collection of prioritized elements that allows arbitrary insertion and allows the removal of the element that has first priority\
+-e.g. different than a restaurant wait list (first in, first out), wait list for a full airplane (a customer with status might have higher priority even if arrives later)\
+\
+-modeled as key-value pairs\
+-methods:\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-03-30 at 11.29.02 AM.png \width11620 \height4820 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+-may have multiple entries with equivalent keys, so min and remove_min may be arbitrary of all the qualifying elements\
+\
+
+\f0\b Implementing a Priority Queue
+\f1\b0 \
+-challenge in implementing is we must keep track of both an element and its key, even as items are relocated within the structure\
+-composition design pattern: ensures each element remains paired with its associated count in our primary data structure\
+-this pattern is used to store items internally as pairs (key = k, value = v)\
+\
+
+\f0\b Implementation with an Unsorted List
+\f1\b0 \
+-steps:\
+	1. Start with an empty list (size always = # of key-value pairs in queue)\
+	2. Each time a key-value pair is added to the priority queue, a new item composite is created 	for the given key and value\
+	3. Add item to end of list\
+-remaining challenge: when min or remove_min is called, have to find the item with the minimum key\
+-because items are not sorted, we must inspect all entries to find one with a minimum key\
+-usually returns the index of the location of the min key\
+\
+
+\f0\b Implementation with a Sorted List
+\f1\b0 \
+-alternative is to use a positional list, yet maintaining entries sorted by nondecreasing keys\
+-ensures the first element is the smallest key\
+-when using a sorted list to implement a priority queue, insertion runs in linear time, whereas finding and removing the minimum can be done in constant time\
+\
+
+\f0\b Heaps
+\f1\b0 \
+-two strategies for implementing a priority queue ADT have a tradeoff:\
+	-when using an unsorted list, insertions are O(1) but finding/removing are O(n) time (loop 	through all elements)\
+	-if using a sorted list, adding a new element requires O(n) time, finding/removing are O(1) time\
+-binary heap: more efficient alternative for priority queues\
+-allows us to perform insertions and removals in logarithmic time, which is a significant improvement over list-based implementations\
+\
+
+\f0\b Heap Data Structure
+\f1\b0 \
+-a heap is a binary tree T that stores a collection of items at its positions\
+-has two additional properties:\
+	\
+	1. A relational property: how keys are stored in T\
+	- for every position p other than the root, the key stored at p is >= the key stored at p\'92s parent\
+	-keys on the path from root to leaf are in nondecreasing order\
+	-minimum key always stored at the root of T	\
+	-we want the heap to have as small of a height as possible\
+	-enforced by insisting T is complete\
+\
+	2. A structural property: shape of T itself\
+	-a heap T with height h is a complete binary tree if levels 0, 1, 2, \'85h-1 of T have the maximum 	number of nodes possible and the remaining nodes at level h reside in the leftmost possible 	positions at that level\
+	-level numbering: positions\
+\
+
+\f0\b Implementing a Priority Queue with a Heap
+\f1\b0 \
+-update operations on a heap are performed in a time proportional to its height, so those operations run in logarithmic time\
+-to add:\
+	1. Store the pair(k, v) as a new node of the tree\
+	2. To maintain the complete binary tree property, that new node should be at position p on the 	rightmost node at the bottom level of the tree or as the leftmost position of a new level\
+
+\f0\b \
+Up-Heap Bubbling After an Insertion
+\f1\b0 \
+-after adding, a tree is complete but may violate the heap-order property\
+-unless position p is the root of T, we compare the key at position p to that of p\'92s parent (q)\
+-if key p > key q, the heap-order property is satisfied and the algorithm terminates\
+-if key p < key 1, then the heap-order property needs to be restored (done via swapping entries at p and q)\
+-the swap moves the new item up one level\
+-repeat the process until no violation occurs\
+-the entire process is called up-heap bubbling\
+\
+
+\f0\b Removing the Item with Minimum Key
+\f1\b0 \
+-an entry with the smallest key is stored at the root r of T\
+-in general, cannot just delete node r because would leave two disconnected subtrees\
+-complete binary tree property: delete the leaf at the last position p of T, the rightmost position of the bottommost tree level\
+-to preserve the item from the last position p, we copy it to the root r (in place of the item with minimum key that is being removed by the operation)\
+-node at the last position is removed from the tree\
+\
+
+\f0\b Down-Heap Bubbling After a Removal\
+
+\f1\b0 -even though T is complete, it likely violates the heap-order property\
+-if T has only one node (the root) then the heap-order property is trivially satisfied and the algorithm terminates\
+-otherwise, two cases:\
+	1. If p has no right child, let c be the left child of p\
+	2. Otherwise (p has both children), let c be a child of p with minimal key\
+\
+-when p has two children, consider the smaller key of the two children\
+-not only is the key of c smaller than that of p, it is at least as small as the key at c\'92s sibling\
+-this ensures the heap-order property is locally restored when that smaller key is promoted above the key that had been at p and that at c\'92s sibling\
+-essentially, it is downward swapping until no violation of the heap-order occurs\
+\
+
+\f0\b Array-Based Representation of a Complete Binary Tree
+\f1\b0 \
+-with this implementation, elements of T have contiguous indices in the range [0, n-1] and the last position of T is always at index n-1, where n is the number of positions of T\
+-implementing a priority queue using an array-based heap representation allows us to avoid some complexities of a node-based tree structure\
+-specifically the add and remove_min operations\
+-if the size of a queue is not known in advance, using an array-based representation does introduce a need to dynamically resize occasionally, like with lists\
+\
+
+\f0\b Implementation
+\f1\b0 \
+-p.377-378 code\
+\
+
+\f0\b Analysis of a Heap-Based Priority Queue\
+
+\f1\b0 -each method can be performed in O(1) or O(log n) time, where n is the number of entries at the time the method is executed\
+-run time analysis is based on the following:\
+	-heap T has n nodes, each storing a reference to a key-value pair\
+	-height of heap T is O(log n) since T is complete\
+	-the min operation runs in O(1) because the root of the tree contains such an element\
+	-locating the last position can performed in O(1) time for an array-based representation\
+	-worst case, up-heap and down-heap bubbling perform a number of swaps equal to height T\
+\
+
+\f0\b Bottom-Up Heap Construction
+\f1\b0 \
+-runs in O(n) time\
+-describe assuming the number of keys, n, is an integer so that n = 2 ** (h + 1)\
+-aka the heap is a complete binary tree with every level being full so that the heap has heigh h = log(n + 1) - 1\
+-steps:\
+	1. Construct (n + 1) / 2 elementary heaps storing one entry each\
+	2. Form (n + 1) / 4 heaps, each storing three entries, by joining pairs of elementary heaps and 	adding a new entry.  New entry placed at the root and may need to be swapped with the child 	entry to preserve the heap-order property.\
+	3. Form (n + 1) / 8 heaps, each storing 7 entries, by joining pairs of 3-entry heaps from step 2 	and adding a new entry.  Placed at root but may have to move down with a down-heap 	bubbling to preserve the heap-order property.\
+	4. And so on \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-03-30 at 1.23.48 PM.png \width12920 \height14660 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\
+-begin by constructing 1-entry heaps (a and b), then combine into 3 entry heaps (c and d), then 7-entry (e and f) until the final heap is created (g and h)\
+\
+-python implementation on p. 382\
+\
+
+\f0\b Asymptotic Analysis of Bottom-Up Heap Construction
+\f1\b0 \
+-asymptotically faster than incrementally inserting n keys into an initially empty heap\
+-performing a single down-heap operation at each position rather than a single up-heap operation from each\
+-more nodes are closer to the bottom of the tree than the top, so the sum of downward paths is linear\
+\
+-heapq module, p. 384\
+\
+
+\f0\b Sorting with a Priority Queue
+\f1\b0 \
+-any object type can be used as a key, but any pair of keys must be comparable to each other\
+-set of keys has to be naturally ordered\
+-strict weak order:  allows keys to be considered equal to each other, but the broader equivalence classes are totally order (can be arranged from smallest to largest)\
+-if the key is a string, < uses lexicographic ordering (an extension of alphabetic ordering)\
+\
+
+\f0\b Selection-Sort and Insertion-Sort
+\f1\b0 \
+-the running time of the sorting algorithm depends on the running times of the operations to add and remove_min for the priority queue class\
+-there are a few implementation options that cause the pq_sort to behave as one of several classic sorting algorithms\
+\
+
+\f0\b Selection-Sort
+\f1\b0 \
+-if implement with an unsorted list, then Phase 1 of pq_sort takes O(n) time\
+-for each added element, it takes O(1) time\
+-phase 2 is proportional to the size of P\
+-the bottleneck computation is repeated \'93selection\'94 of the minimum element in phase 2\
+-the bottleneck is in phase 2, where you repeatedly remove an entry with the smallest key from the priority queue P\
+-P size starts at n and incrementally decreases with each remove_min until it becomes 0\
+-execution diagram:\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-03-30 at 1.38.01 PM.png \width7080 \height5060 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+-phase 1: import collection and add to priority queue incrementally\
+-phase 2: remove from priority queue in appropriate order and return result\
+\
+
+\f0\b Insertion-Sort
+\f1\b0 \
+-if we implement the priority queue p using a sorted list, the phase 2 run time is improved to O(n)\
+-each remove_min on P now takes O(1) time\
+-phase 1 becomes the bottleneck\
+-example diagram:\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-03-30 at 2.03.20 PM.png \width6960 \height4960 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\
+
+\f0\b Heap-Sort
+\f1\b0 \
+-prior method suitable for applications where fast run times are sought for all priority queue methods\
+-heap-sort: sorts a collection C of n elements in O(n log n) times assuming two elements of C can be compared in O(1) time\
+\
+
+\f0\b Implementing Heap-Sort In-Place
+\f1\b0 \
+-if the collection C to be sorted is implemented by means of an array-based sequence (a list), we can speed up heap-sort and reduce its space requirement by a constant factor using a portion of the list itself to store the heap\
+-this avoids the use of an auxiliary heap data structure\
+-steps:\
+	1. Redefine heap operations to be a maximum-oriented heap, with each position\'92s key being at 	least as large as its children.  Done via recoding the algorithm or adjusting the notion of keys to 	be negatively oriented.\
+	2. In the first phase of the algorithm, we start with an empty heap and move the boundary 	between the heap and the sequence from left to right, one step at a time.  Expand the heap by 	adding the element at index I - 1.\
+	3. Second phase, start with an empty sequence and move the boundary between the heap 	and the sequence from right to left, one step at a time.  At step I, for I = 1, remove a maximum 	element from the heap and store at n - I.\
+\
+-in-place: sorting is called this if it uses only a small amount of memory in addition to the sequence storing the objects to be sorted\
+-this is in-place because elements are rearranged rather than moved in and out of sequence\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 -diagram example:\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-03-30 at 2.13.02 PM.png \width9840 \height11600 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+-video visualizing here: {\field{\*\fldinst{HYPERLINK "https://www.youtube.com/watch?v=MtQL_ll5KhQ"}}{\fldrslt 
+\f2 \cf2 \expnd0\expndtw0\kerning0
+\ul \ulc2 \outl0\strokewidth0 \strokec2 https://www.youtube.com/watch?v=MtQL_ll5KhQ}}
+\f2 \cf2 \expnd0\expndtw0\kerning0
+\ul \ulc2 \outl0\strokewidth0 \strokec2 \
+\
+
+\f0\b \cf0 \kerning1\expnd0\expndtw0 \ulnone \outl0\strokewidth0 Implementing an Adaptable Priority Queue\
+
+\f1\b0 -example p.391\
+\
+\
+\
+\
+
+\f0\b \
+
+\f1\b0 \
+\
+\
+\
+\
+\
+\
+\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\
+\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+}
