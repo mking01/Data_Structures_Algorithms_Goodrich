@@ -1,0 +1,673 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2511
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica-Bold;\f1\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww11560\viewh9020\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\b\fs24 \cf0 Ch. 10 - Maps, Hash Tables, and Skip Lists
+\f1\b0 \
+\
+
+\f0\b Maps and Dictionaries
+\f1\b0 \
+-dict class arguably the most significant data structure in the language\
+-dictionary maps unique keys to values\
+-dictionaries commonly known as associative arrays / maps\
+-keys are unique, values are not unique\
+-map indices do not need to be consecutive or even numeric\
+-e.g. student ID mapped to student record\
+\
+
+\f0\b The Map ADT
+\f1\b0 \
+-map ADT: behaviors consistent with the dict class\
+-five most significant behaviors:\
+	1. M[k]: 	returns the value associated with the key, k in map M\
+	2. M[k] = v: 	associate value v with key k in map M, replacing the existing value if the map 			already contains an item with key equal to k\
+	3. del M[k]: 	remove from map M the item with key equal to k\
+	4. len(M): 	return the number of items in map M\
+	5. iter(M):	 generates a sequence of keys in the map\
+\
+-five additional behaviors for convenience:\
+	1. K in M: 			return True if map contains an item with key k\
+	2. M.get(k, d = None):	return M[k] if key k exists in the map; otherwise return default value \
+	3. M.setdefault(k, d): 	if key k exists in map, return M[k], if not, set M[k]=d and return\
+	4. M.pop(k, d = None):	remove the item associated with key k from the map and return its 					associated value v.  If key k is not in the map, return the default 					value d.\
+	5. M.popitem():		Remove key-value pair from map and return a tuple of the pair\
+	6. M.clear():			Remove all key-value pairs from the map\
+	7. M.keys():			Return a set-like view of all keys\
+	8. M.values():		Return a set-like view of all values in M\
+	9. M.items():			Return a set-like view of (k, v) tuples for all entries in M\
+	10. M.update(M2):		Assign M[k] = v for every (k, v) pair in map M2\
+	11. M == M2:			Return True if maps M and M2 are identical\
+	12. M != M2:			Return True if maps M and M2 are not identical\
+\
+
+\f0\b MutableMapping Abstract Base Class
+\f1\b0 \
+-abstract base class: provides concrete implementation of other methods that depend on the use of presumed abstract methods\
+-collections module provides two abstract base classes - Mapping and MutableMapping\
+-Mapping: includes all non mutating methods\
+-MutableMapping: includes mutating methods\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-03-31 at 10.47.19 AM.png \width11040 \height6380 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\
+-class code p.408\
+\
+
+\f0\b Simple Unsorted Map Implementation
+\f1\b0 \
+-p.409 for code\
+\
+
+\f0\b Hash Tables
+\f1\b0 \
+-map M supports the abstraction of using keys as indices with a syntax like M[k]\
+-hash tables are a practical data structure for implementing a map\
+-initial representation: store value associated with key k at index k of the table of the table\
+-two challenges in extending this framework to a more general map setting:\
+	1. May not wish to devote an array of length N if N >> n\
+	2. Do not require a map\'92s keys be integers\
+\
+-hash function: maps general keys to corresponding indices in a table\
+-keys will ideally be distributed in the range from 0 to N-1\
+-may be two or more distinct keys that are mapped to the same index\
+-bucket array: way to conceptualize the table where each bucket in the array manages a collection of items sent to a specific index / key\
+-example:\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-03-31 at 11.11.17 AM.png \width11240 \height3340 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\
+\
+
+\f0\b Hash Function
+\f1\b0 \
+-hash function goal is to map each key k to an integer in the range [0,N-1], where N is the capacity of the bucket array for a hash table\
+-equipped with a hash function, h, the main idea is to use the has function value, h(k), as an index into our bucket array, A, instead of the key, k\
+-e.g. we store the item (k,v) in the bucket A[h(k)]\
+\
+-if there are two or more keys with the same hash value, the two items will be mapped to the same bucket in A\
+-those cases are considered collisions\
+-best strategy is to avoid collisions in the first place\
+-a hash function is \'93good\'94 if it maps the keys in our map so as to sufficiently minimize collisions\
+-secondary goals: fast, easy to compute\
+\
+-a hash function has two portions (for a bucket array):\
+	1. A hash code that maps key k to an integer\
+	2. A compression function that maps the hash code to an integer with a range of indices [0,N-1]\
+\
+-visualization:\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-03-31 at 11.17.37 AM.png \width8540 \height5460 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+-the advantage of separating the hash function into two components is the hash code portion of that computation is independent of a specific hash table size\
+-allows development of a general hash code for each object that can be used for a hash table of any size\
+-only the compression function depends on the table size\
+-convenient because the underlying bucket array for a hash table can be dynamically resized depending on the number of items currently stored in the map\
+\
+
+\f0\b Hash Codes
+\f1\b0 \
+-hash function steps:\
+	1. Take an arbitrary key in k\
+	2. Compute an integer called the hash code for k (does not need to be in range [0,N-1]\
+\
+-hash codes can be negative\
+-want the codes assigned to keys to avoid collisions as much as possible\
+\
+
+\f0\b Treating the Bit Representation as an Integer
+\f1\b0 \
+-for any data type X that is represented using t most as many bits as our integer hash codes, we can take as a hash code for X an integer interpretation of its bits\
+-e.g. hash code for code 314 could be 314\
+-for types whose bit representation is longer than a desired hash code, you can use high-order 32 bits instead\
+-risk: ignores half of info present in original key\
+-risk 2: if many keys of the map only differ a little, they will collide using this simple hash code\
+-better approach: combine high order and low order portions of a 64-bit key to form a 32-bit hash code\
+-add the two components as 32-bit numbers or take the exclusive-or of the two components\
+\
+
+\f0\b Polynomial Hash Codes
+\f1\b0 \
+-summation and exclusive-or hash codes are not good options for character strings or variable-length objects stored as tuples where order is significant\
+-a better hash code takes into consideration the position of the order \
+-an alternative hash code is to choose a nonzero constant, a != 1, and use as a hash code the value:\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-03-31 at 11.35.06 AM.png \width5260 \height1020 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 -is a polynomial in a that takes the x components of an object x as its coefficients\
+-called a polynomial hash code\
+-uses multiplication by different powers to spread out the influence of each component across the hash code\
+-overflows will occur\
+-choose the constant a so it has some nonzero, low-order bits to preserve information content even in an overflow situation\
+-33, 37, 39, 41 are good for a\
+\
+
+\f0\b Cyclic-Shift Hash Codes
+\f1\b0 \
+-a variant of polynomial hash code replaces multiplication by a with a cyclic shift of a partial sum by a certain number of bits\
+-ex. On p. 413\
+-just takes the leftmost 5 bits and moves them to the far right end\
+-varies enough they are different and can be used to increase volume of bits and minimize collisions\
+\
+
+\f0\b Hash Codes in Python
+\f1\b0 \
+-to implement in Python, use the built-in hash(x) function\
+-returns an integer value that is the hash code for object x\
+-only immutable data types deemed hashable in python\
+-restriction is meant to ensure a particular object\'92s hash code stays constant during that object\'92s lifespan\
+-helps ensure all keys are unique\
+-int, float, str, tuple, and frozen set produce robust hash codes (are immutable)\
+-hash codes for character strings are crafted using a technique similar to polynomial hash codes, except using exclusive-or computations rather than additions\
+-hash codes for tuples are computed with a similar technique based on a combination of hash codes of the individual elements of the tuple\
+-user-defined classes are treated as unhashable\
+-important rule: if a class defines equivalence using __eq__, any implementation of __hash__ must be consistent (e.g. if x == y, then hash(x) == hash(y))\
+-important because if two instances are equivalent and one is a key in a hash table, looking for the second instance should also yield the first instance\
+-the hash code needs to match both instances if they are equivalent\
+\
+
+\f0\b Compression Functions
+\f1\b0 \
+-hash code for key k will not be suitable for immediate use with a bucket array because the integer hash code might be negative or exceed capacity of the bucket array\
+-once there\'92s an integer hash code for key object k, still need to map the integer to the range [0,N-1]\
+-the mapping function is called the compression function\
+\
+
+\f0\b The Division Method
+\f1\b0 \
+-division method: maps an integer I to I mod N where N, size of the bucket array, is a fixed positive integer\
+-if N is prime, the compression function helps spread out the distribution of hashed values\
+-if N is not prime, there is greater risk patterns in the hash code distribution\
+-if a hash function is chosen well, it should ensure the probability of two different keys getting hashed to the same bucket is 1/N\
+-if there is a repeated pattern of hash codes (pN + q) for several different p\'92s there will still be collisions\
+\
+
+\f0\b The Mad Method
+\f1\b0 \
+-multiply-add-divide method helps eliminate repeated patterns in a set of integer keys\
+-maps an integer I to [(ai + b) mod p] mod N \'97> where N is the size of the bucket array, p is a prime number larger than N, and a and b are integers chosen randomly from [0,p-1] with a > 0\
+-compression function chosen to eliminate repeated patterns in the set of hash codes\
+\
+
+\f0\b Collision-Handling Schemes
+\f1\b0 \
+-main idea: take a bucket array, A, and a hash function, h, and use them to implement a map by storing each item (k, v) in the bucket A[h(k)]\
+-challenged when two distinct keys where k1 = k2, called a collision\
+\
+
+\f0\b Separate Chaining
+\f1\b0 \
+-separate chaining: have each bucket A[j] store its own secondary container, holding items (k,v) so that h(k) = j\
+-visualization:\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-03-31 at 12.59.36 PM.png \width9800 \height5860 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\
+-worst case, operations on an individual bucket take time proportional to the bucket size\
+-load factor:  y = n/N, length of time required to run core map operations\
+-disadvantage: requires using an auxiliary structure (a list) to hold items with colliding keys\
+\
+
+\f0\b Open Addressing
+\f1\b0 \
+-alternative to the disadvantage of separate chaining\
+-if space is at a premium, store each item directly in a table slot\
+-saves space because no auxiliary structures are used\
+-requires more complexity to deal with the collisions\
+-open addressing: variants of the alternative above\
+-requires the load factor is always 1 at most\
+-requires items are stored directly in the cells of the bucket array itself\
+\
+
+\f0\b Linear Probing and Its Variants
+\f1\b0 \
+-linear probing: method of handling collisions with open addressing\
+-if you insert an item (k, v) into a bucket A[j] that is already occupied, where j = h(k), then add one and try again, if occupied add another 1 and try again\
+-repeat until find an empty bucket that can also accept the new item\
+-once the bucket is located, insert the item there\
+-to locate an item with key = k, examine consecutive slots until you find that item or an empty bucket\
+-visualization:\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-03-31 at 1.07.31 PM.png \width9940 \height3180 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\
+-to implement a deletion, cannot just remove the item from its slot\
+-to delete, need to replace a deleted item with an \'93available\'94 marker object\
+-then modify the search algorithm so that the search for key k will skip over cells containing the available marker and continue probing until reaching the desired item or an empty bucket\
+-advantage: saves space\
+-disadvantage: clusters map ints into contiguous runs, which may overlap (particularly if more than half of cells in the hash table are occupied)\
+\
+\
+-quadratic probing: iteratively tries buckets A[(h(k) + f(i)) mod N] for I = 0, 1, 2\'85. Where f(I) = I**2 until an empty bucket is found\
+-complicates the removal operation\
+-does avoid the clustering patterns that happen with linear probing\
+-creates its own kind of clustering, secondary clustering, where filled array cells still have a non-uniform pattern\
+-guaranteed to find an empty slot when N is prime and the bucket array is less than half full\
+-not valid once the table becomes at least half full or if N is not prime\
+\
+-double hashing: choose a secondary hash function, h\'92, and if h maps key k to a bucket A[h(k)] that is already occupied, iteratively try buckets A[h(k) + f(I)) mod N] for I = 1, 2, 3\'85where f(i) = I * h\'92(k)\
+-does not cause clustering\
+-the secondary hash function is not allowed to evaluate to zero\
+-N should be prime\
+\
+-to avoid clustering, could also iteratively try buckets A[h(k) + f(I)) mod N] where f(I) is based on a pseudo-random number generator\
+-provides a repeatable but arbitrary sequence of probes that depends on bits of original hash code\
+-is what the dictionary class uses\
+\
+
+\f0\b Load Factors, Rehashing, and Efficiency
+\f1\b0 \
+-load factor needs to be kept below 1\
+-with separate chaining, as y gets close to 1, the probability of collision increases\
+-adds overhead to operations\
+-with open addressing, as load factor grows beyond 0.5 and starts approaching 1, clusters of entries start growing as well\
+-clusters cause probing strategies to \'93bounce around\'94 the bucket array for considerable time before they find an empty slot\
+-experiments suggest maintaining a less than 0.5 load factor for open addressing with linear probing\
+-if an insertion causes the load factor of a hash table to go above the specified threshold, its common to resize the table and reinsert all objects into this new table\
+-rehashing: scatters items through the new bucket array\
+-when rehashing to a new table, it\'92s a good requirement to double the size of the new array\
+\
+
+\f0\b Efficiency of Hash Tables
+\f1\b0 \
+-if the hash function is good, entries will be uniformly distributed in the N cells of the bucket array\
+-hash tables are among the most efficient means for implementing a map\
+-python\'92s dict class is implemented with hashing\
+-the interpreter relies on dictionaries to retrieve an object referenced by a namespace identifier\
+-we presume dictionary operations run in constant time, independent of the number of namespace entries\
+\
+
+\f0\b Python Hash Table Implementation
+\f1\b0 \
+-p.422, two implementations (one using linear probing, one using separate chaining)\
+\
+\
+
+\f0\b Sorted Maps
+\f1\b0 \
+-exact search: searching for a key rather than a value associated with a given key\
+-example: using a time stamp as a reference ID for an event\
+-sorted map behaviors:\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-03-31 at 2.09.56 PM.png \width12340 \height9760 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\
+
+\f0\b Sorted Search Tables
+\f1\b0 \
+-sorted search table:  storing map items in an array-based sequence so they are in increasing order of their keys\
+-sorted search table has a space requirement of O(n)\
+-advantage: allows us to use binary search for algorithm operations\
+\
+
+\f0\b Binary Search and Inexact Searches
+\f1\b0 \
+-while performing a binary search, we can determine the index at or near where a target lives\
+-during a successful search, although the target is not found, the algorithm will determine a pair of indices designating elements of the collection that are <= or just greater than the missing target\
+\
+
+\f0\b Implementation
+\f1\b0 \
+-p.429-432\
+\
+
+\f0\b Analysis
+\f1\b0 \
+-__len__, find_min, and find_max() run in O(1) time\
+-iterating the keys in various methods run in O(n) time\
+-O(log n) then becomes the worst-case run time for __getitem__, and finding certain items\
+-updates take considerable time\
+-binary search helps identify the index needing the update, but insertions and deletions require lots of operations in worst case (shifting all existing elements to maintain sorted order), runs in O(n) time\
+\
+
+\f0\b Applications of Sorted Maps
+\f1\b0 \
+-explore advantage of using a sorted map over an unsorted map\
+-to apply a sorted map, keys must come from an ordered domain\
+-there should be some reason why keys have relevance to the search\
+-example: searching for flights and returning flight information in order of departure time\
+\
+-maxima sets: if one object in a collection is greater than others in respect to both x and y (usually in relation to cost-performance pairs)\
+-can remove points that are less than x and y compared to a given point using a sorted map\
+\
+
+\f0\b Skip Lists\
+
+\f1\b0 -skip list: a series of lists that provide a clever compromise to efficiently support search and update operations\
+-sorted arrays allow O(log n)-time searches, O(n) worst case run times because of shifting elements\
+-each list Si stores a subset of the items of M sorted by increasing keys, plus items with two sentinel keys (negative infinity and positive infinity) representing the negative and positive value bounds\
+-lists in the skip list also meet the following criteria:\
+	1. List S0 Fontaine\'92s every time of the map M (plus the sentinels)\
+	2. For I = 1\'85.h-1, list Si contains (in addition to the sentinels) a randomly generated subset of the 	items in list S(I -1)\
+	3. List Sh contains only the sentinels\
+-visualization example:\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-03-31 at 3.21.28 PM.png \width12220 \height4380 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+-h = height of skip list\
+-lists are set up so S(I + 1) contains alternate items of Si\
+-height of S is about log n\
+-advantage of using randomization in data structure and algorithm design is the structures and functions are usually simple and efficient\
+-a skip list makes random choices in arranging its structure so that search and update times are O(log n) on average, where n is the number of times in the map\
+-a skip list then becomes a two-dimensional collection of positions arranged horizontally into levels and vertically into towers (same numbering for trees)\
+-each level is a list Si and each tower contains positions storing the same item across consecutive lists\
+-traverse positions using the following operations:\
+	1. next(p): return the position following p on the same level\
+	2. prev(p): return the position preceding p on the same level\
+	3. below(p): return the position below p in the same tower\
+	4. above(p): return the position above p in the same tower\
+-return None if the position requested does not exist\
+-O(1) time\
+\
+
+\f0\b Search Operations in a Skip List
+\f1\b0 \
+-skip-list structure affords simple map search and update algorithms\
+-begin by setting a position variable p to the topmost left position in skip list S\
+-start position: topmost left position\
+-start position is the position of Sh storing the special entry with the negative bound sentinel\
+-then perform the following steps:\
+	1. If S.below(p) is None, the search terminates (we\'92re at the bottom and have located the item in S 	with the largest key).  Otherwise, drop down to the next lower level in the present tower by setting p = 	S.below(p).\
+	2. Starting at position p, we move p forward until it is at the rightmost position the present level so that 	key(p) <= k.  This is called scan forward.\
+	3. Return to step 1.\
+\
+-example:\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-03-31 at 3.44.09 PM.png \width12040 \height4020 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 -expected run time is O(log n)\
+\
+
+\f0\b Skip List Insertions
+\f1\b0 \
+-after inserting in S0, use randomization to decide the height of the tower for the new item\
+-continue to insert the new item in lists until getting a flip that says stop\
+-link all references together for the new item to create its tower\
+-code on p.441\
+-visualization:\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-03-31 at 3.48.07 PM.png \width12280 \height3940 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+
+\f0\b Skip List Removal
+\f1\b0 \
+-the removal algorithm is simple\
+-to perform the map operations del M[k], start by executing method SkipSearch(k)\
+-if the position p stores an entry with key different from k, raise an error\
+-otherwise, remove p and all positions above p, using above to climb the tower up to that entry in S starting at position p\
+\
+-don\'92t need to store references to values at the levels of the skip list above the bottom level\
+-represent a tower as a single object, storing the key-value pair and maintaining j previous references and j next references if the tower reaches level Sj\
+\
+
+\f0\b Maintaining the Topmost Level
+\f1\b0 \
+-skip list S must maintain a reference to the start position (the topmost, left position in S) and must have a policy for any insertion that wishes to continue inserting a new entry past the top level of S\
+-two options for actions:\
+	1. Restrict the top level, h, to be kept at some fixed value that is a function of n\
+	-modify the insertion algorithm to stop inserting a new position once you reach the topmost level\
+	2. Let an insertion continue inserting a new position as long as heads keep getting returned from the 	random number generator\
+-both run in O(log n) time\
+\
+
+\f0\b Probabilistic Analysis of Skip Lists
+\f1\b0 \
+-skip lists are not a superior data structure regarding worst-case performance\
+-they are good for simply implementing sorted maps\
+-if you do not officially prevent an insertion from continuing significantly past the highest level, the insertion algorithm can go into an almost infinite loop\
+-risk running out of memory\
+-if you terminate position insertion at the highest level h, the worst-case run time becomes O(n + h)\
+-it occurs when the tower of every entry reaches h - 1 where height of S = h\
+-that event has very low probability of occurring\
+\
+
+\f0\b Bounding the Height of a Skip List
+\f1\b0 \
+-the most accurate analysis involves probability because insertion involves randomization\
+-start by determining the expected value of the heigh h of a skip list S with n entries\
+-probability a given entry has a tower of height I >= 1 is equal to the probability of getting I consecutive heads when flipping a coin (probability is 1/2**I)\
+-the probability the heigh of S is larger than I = the probability level I has at least one position, no more than Pi.  H is larger than 3 log n.\
+\
+
+\f0\b Analyzing Search Time in a Skip List
+\f1\b0 \
+-run time involves two nested while loops\
+	-inner loop scans forward on a level of S\
+	-outer loop drops down to the next level and repeats the scan forward\
+-O(log n) because height of S is O(log n) and so is the number of drop down steps (outer loop)\
+-scanning forward is O(1)\
+-so worst case is O(log n)\
+\
+
+\f0\b Space Usage in a Skip List
+\f1\b0 \
+-expected number of positions at level I is n/(2**I)\
+-expected space requirement of S is O(n)\
+-run time performance by operation:\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-03-31 at 4.36.16 PM.png \width10980 \height4780 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+
+\f0\b Sets, Multisets, and Multimaps
+\f1\b0 \
+-set: unordered collection of unique elements\
+-multiset: set-like container that allows duplicates (aka bag)\
+-multimap: in a multimap, the same key can be mapped to multiple values\
+\
+
+\f0\b The Set ADT
+\f1\b0 \
+-supports sets through the built-in classes of frozenset and set\
+-frozenset is immutable\
+-collections module defines abstract base classes that mirror these built-in classes\
+-five most fundamental behaviors for a set:\
+	1. S.add(e):		add element e to set\
+	2. S.discard(e):	remove element e from set\
+	3. E in S: 		return True if set contains element e\
+	4. len(S):		return number of elements in set S\
+	5. iter(S):		generate an iteration of all elements of the set\
+\
+-to remove behaviors from a set:\
+	1. S.remove(e):	removes element e from set\
+	2. S.pop():		remove and return an arbitrary element from the set\
+	3. S.clear():		remove all elements from set\
+\
+-to make Boolean comparisons:\
+	1. S == T\
+	2. S != T\
+	3. S <= T\
+	4. S < T\
+	5. S >= T\
+	6. S > T\
+	7. S.isdisjoint(T): 	returns True if sets S and T have no common elements\
+\
+-behaviors to update an existing set or compute a new set instance:\
+	1. S | T: 	return a new set representing the union of sets S and T\
+	2. S |= T: 	update set S to be the union of S and set T\
+	3. S & T: 	return a new set representing the intersection of sets S and T\
+	4. S &= T: 	update set S to be the intersection of S and set T\
+	5. S ^ T: 	return a new set representing the symmetric difference of sets S and T (elements 			appearing in one or the other but not both)\
+	6. S ^= T: 	update set S to become the symmetric difference of itself and set T\
+	7. S - T: 	return new set containing elements in S but not T\
+	8. S -= T: 	update set S to remove all common elements with set T\
+\
+
+\f0\b MutableSet Abstract Base Class
+\f1\b0 \
+-collections module provides a MutableSet abstract base class (and MutableMapping base class)\
+-provides five core behaviors (add, discard, __contains__, __len__, and __iter__)\
+-code p.449\
+\
+
+\f0\b Implementation - Sets
+\f1\b0 \
+-a set is a map with no associated values\
+-any structure used to implement a map can be modified to implement a set\
+\
+
+\f0\b Implementation - Multisets
+\f1\b0 \
+-same element can occur several times\
+-all data structures reimplemented to allow for duplicates can be used\
+-can also use a map where the map key is distinct and the associated value is a count of number of occurrences\
+\
+
+\f0\b Implementation - Multimaps
+\f1\b0 \
+-a common approach is to use a standard map where the value associated with a key is itself a container class storing any number of associated values\
+-uses a standard dict class as the map and a list of values as a composite value\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+}
