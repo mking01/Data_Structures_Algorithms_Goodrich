@@ -1,0 +1,403 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2511
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica-Bold;\f1\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\b\fs24 \cf0 Ch. 12 - Sorting and Selection
+\f1\b0 \
+\
+-goal is to rearrange elements so they are ordered from smallest to largest or to produce a new copy of the sequence with such an order\
+-two main ways to define order:\
+	1. Irreflexive: k is not < k\
+	2. Transitive: if k1 < k2 and k2 < k3, then k1 < k3\
+-built-in Python support \'97> sort method\
+-other kinds of sorts:  insertion sort, selection sort, bubble sort, heap sort\
+-this chapter: merge sort, quick sort, bucket sort, radix sort\
+\
+\
+
+\f0\b Merge Sort
+\f1\b0 \
+-divide and conquer: merge sort and quick sort use this recursive method\
+-three steps:\
+	1. Divide: if input size is smaller than a certain threshold, solve the problem.  Otherwise divide 	the input data into two or more disjoint subsets.\
+	2. Conquer: recursively solve the subproblems associated with the subsets\
+	3. Combine: take the solutions to the subproblems and merge them into a solution to the 	original problem\
+\
+
+\f0\b Using for Sorting
+\f1\b0 \
+1. Divide:  If S has zero or 1 element, return S.  Otherwise, remove all elements from S and put them into two sequences, S1 and S2, each containing about half of the elements.\
+2.  Conquer: Recursively sort sequences S1 and S2.\
+3. Combine: Put back the elements into S by merging the sorted sequences S1 and S2 into a sorted sequence.\
+\
+-in the divide step, |x| indicates the floor (largest k so that k <= x)\
+- [x] indicates the ceiling (so that x <= m)\
+\
+-merge-sort tree: visualizes the execution of the algorithm, p.539\
+\
+
+\f0\b Array-Based Implementation of Merge-Sort
+\f1\b0 \
+-sequence of items represented by a list\
+-merge() merges two previously sorted sequences\
+-copy one element during each pass of the while loop, conditionally determining whether the next element should be taken from S1 or S2\
+-code p. 543\
+\
+
+\f0\b Run Time of Merge Sort
+\f1\b0 \
+-run time is O(n1 + n2)\
+-operations inside each while loop pass are O(1)\
+-the key is during each iteration of the loop, one element is copied either from S1 or S2 into S, which is where n1 + n2 comes in\
+-recursive call associated with node v of the merge-sort tree T\
+-divide step at node v is straightforward; it runs in time proportional to the size of the sequence for v based on using slicing to create copies of the two list halves\
+-running time of merge-sort is equal to the sum of times spent at nodes of T\
+-T has 2**I nodes at depth I\
+-visualization:\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-04-01 at 11.24.11 AM.png \width10360 \height6680 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+
+\f0\b Merge Sort and Recurrence Equations
+\f1\b0 \
+-O(n log n) - can be shown through recursion\
+-recurrence equation / relation - proof on p. 546\
+\
+\
+
+\f0\b Alternative Implementations
+\f1\b0 \
+-sorting linked lists\
+-queues\
+\
+
+\f0\b Bottom-Up (Nonrecursive) Merge-Sort\
+
+\f1\b0 -non-recursive version of array-based merge-sort\
+-runs in O(n log n) time\
+-faster than recursive merge sort in practice because it avoids the extra overheads of recursive calls and temporary memory\
+-main idea: perform the merges level by level going up the merge sort tree\
+-begin by merging every pair of elements into sorted runs of length two\
+-merge runs into runs of four, then into eight, until the array is sorted\
+-to keep space usage reasonable, a second array that stores the merged runs is deployed\
+\
+
+\f0\b Quick Sort
+\f1\b0 \
+-also based on divide and conquer, but uses the technique in an opposite way\
+\
+
+\f0\b High Level Description of Quick-Sort
+\f1\b0 \
+-sorts a sequence, S, using recursion\
+-main idea: apply divide and conquer technique, where you divide S into subsequences, recur to sort each subsequence, then combine the sorted subsequences by a simple concatenation \
+-steps:\
+	1. Divide: if S has at least two elements, select a specific element x from S.  This is called the 	pivot.  Choose the pivot x to be the last element in S.  Remove all elements from S and put 	them into three sequences:\
+		-L:  elements in S less than x\
+		-E: elements in S equal to x\
+		-G: elements in S greater than x\
+	2. Conquer: Recursively sorts sequences L and G\
+	3. Combine: Put back the elements into S in order by first inserting the elements of L, then E, 	then G.\
+-visualize:\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-04-01 at 11.34.19 AM.png \width5320 \height5460 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\
+\
+-height of the quick sort tree associated with an execution of quick sort is linear in the worst case\
+-standard choice of the last element as pivot yields L of n - 1, while each E has a size of 1 and G has a size of 0\
+-each iteration decreases the size of L by 1\
+-so the height of the quick sort tree is n-1\
+-visualization:\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-04-01 at 11.48.00 AM.png \width7520 \height10100 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\
+
+\f0\b Quick Sort for General Sequences
+\f1\b0 \
+-implementation code p.555\
+\
+
+\f0\b Quick Sort Run Time
+\f1\b0 \
+-the divide step and final concatenation happen in linear time\
+-time spent at node v of T is proportional to the input size s(v) of v\
+	-size of the sequence handled by quick sorting whatever lives at node v\
+-subsequence of E has at least one element (the pivot), so the sum of input sizes of the children of v is at most s(v)-1\
+-best case occurs when subsequences L and G have about the same size\
+-tree has height O(log n) and quick-sort runs in O(n log n) time\
+-on average, is an expected run time of O(n log n) time\
+\
+
+\f0\b Randomized Quick Sort
+\f1\b0 \
+-goal: get close to the best case run time\
+-use the pivot to divide the input sequence S almost equally\
+-if this outcome occurred, it would result in a run time that\'92s the same as the best case run time - O(n log n)\
+\
+
+\f0\b Picking Pivots at Random
+\f1\b0 \
+-the goal of the partition step is to divide the sequence S with sufficient balance\
+-do so by picking a random element of the input sequence\
+-keep the rest unchanged\
+-called randomized quick sort\
+-expected run time of a randomized quick sort on a sequence with n elements is O(n log n)\
+-run time is O(n log n)\
+-visualization:\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-04-01 at 1.54.26 PM.png \width9400 \height5880 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+
+\f0\b Additional Optimizations
+\f1\b0 \
+-in-place: an algorithm is in place if it uses only a small amount of memory\
+-option: \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-04-01 at 1.58.19 PM.png \width11540 \height2460 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+
+\f0\b Pivot Selection
+\f1\b0 \
+-implementation blindly picks the last element as the pivot at each level of the quick-sort recursion\
+-improve via \'97> use a randomly chosen pivot for each partition step\
+-alternately: choose the median of three values taken from the front, middle, and tail of the array\
+-aka the median-of-three\
+-lower overhead than a random number generator\
+\
+
+\f0\b Hybrid Approaches
+\f1\b0 \
+-high overhead on small datasets\
+-it is common to use a hybrid approach\
+	-divide-and-conquer algorithm used until the size of a subsequence falls below some threshold\
+	-insertion-sort can be invoked directly on parts where the length is below the threshold\
+\
+
+\f0\b Linear-Time Sorting:  Bucket Sort and Radix Sort
+\f1\b0 \
+-sorting algorithms that run asymptotically faster than O(n log n) time\
+\
+
+\f0\b Bucket Sort
+\f1\b0 \
+-sequence of S entries whose keys are integers ranging from [0, N-1] for some integer N >= 2\
+-suppose S should be sorted according to the keys of the entries\
+-is possible to sort S in O(n + N) time\
+-if N is O(n) then we can sort S in O(n) time\
+-bucket sort: uses keys as indices into bucket array B that has cells indexed from 0 to N - 1\
+-entry with key k is placed in bucket B, which is itself a sequence of entries with key k\
+-after inserting each entry of the input sequence S into its bucket, we can put the entries back into S in sorted order\
+-do it via number the contents of buckets B[0]\'85B[N-1]\
+\
+
+\f0\b Stable Sorting
+\f1\b0 \
+-a sorting algorithm is stable if for any two entries (ki, vi) and (kj, vj) of S such that ki = kj and (ki, vi) precedes (kj, vj) in S before sorting (aka I < J)\
+-stability is important because applications may want to preserve initial order of elements with the same key\
+-when initially placing elements of S into buckets, process S from front to back and add each element to the end of its bucket\
+-when transferring elements back to S, process each B[I] from front to back with those elements added to the end of S\
+\
+
+\f0\b Radix Sort
+\f1\b0 \
+-stable sorting is important because it allows bucket sort approach to be applied to more general contexts than just sorting integers\
+-as an example, sorting keys using dictionary conventions\
+-radix-sort algorithm sorts a sequence of S entries with keys that are pairs\
+-how?  \'97> via applying a stable bucket sort on the sequence twice\
+-round 1:  uses one component of the pair as the key when ordering\
+-round two: then using the second component when ordering\
+-first sort on the ks (component one)\
+-then on the ls (component two)\
+\
+** sort the second component first, then the first component second to get the correctly sorted sequence\
+\
+
+\f0\b Comparing Sorting Algorithms
+\f1\b0 \
+-insertion sort and selection sort:  O(n**2) behavior in worst case\
+-heap sort, merge sort, quick sort:  O(n log n) behavior\
+-bucket sort and radix sort: O(n) behavior\
+\
+-
+\f0\b insertion sort
+\f1\b0  running time is O(n + m) where m is the number of inversions (number of pairs of elements out of order)\
+-good for small sequences\
+-good for sequences that are almost sorted\
+\
+-
+\f0\b heap sort
+\f1\b0  run time is O(n log n) worst case\
+-optimal for comparison-based sorting methods\
+-can execute in place\
+-good for small and medium sized sequences when input data fits in main memory\
+\
+-
+\f0\b quick sort
+\f1\b0  run time is O(n**2) worst case\
+-expected performance is O(n log n)\
+-does not naturally provide a stable sort because it swaps elements during partitioning\
+-was the default choice for general purpose sorting\
+\
+
+\f0\b -merge sort
+\f1\b0  run time is O(n log n) worst case\
+-it is difficult to make merge sort run in-place for arrays\
+-good for situations where the input is stratified across various levels of the computer\'92s memory hierarchy (cache, main memory, external memory)\
+\
+
+\f0\b -bucket and radix sort
+\f1\b0  run time is O(d(n + N)) where [0, N - 1] is the range of integer keys and d = 1 for bucket sort\
+-if d(n + N) is significantly \'93below\'94 the n log n function, this sorting method should run faster than quick sort, heap sort, or merge sort\
+\
+
+\f0\b Built-In Sort Functions\
+
+\f1\b0 -two ways:\
+	1. sort() method from the list class\
+	-applies < to the sequence of elements\
+	2. sorted() method can be used for a new ordered list containing elements of any existing 	iterable container\
+\
+
+\f0\b Decorate - Sort - Undecorate Design Pattern
+\f1\b0 \
+-decorate-sort-undecorate design pattern: support for a key function when sorting \
+-three steps:\
+	1. Each element of the list is temporarily replaced with a \'93decorated\'94 version that include the 	result of the key function applied to the element\
+	2. The list is sorted based on the natural order of the keys\
+	3. The decorated elements are replaced by the original elements\
+\
+
+\f0\b Selection
+\f1\b0 \
+-goal: identify a single element in terms of its rank relative to the sorted order of the set\
+-e.g. identify the median element in a set\
+-order statistics:  queries that ask for an element with a given rank\
+\
+
+\f0\b Defining the Selection Problem
+\f1\b0 \
+-selection problem: selecting the 4th smallest element from an unsorted collection of n elements\
+-solve by sorting the collection and then indexing into the sorted sequence at index k - 1\
+-approach takes O(n log n) time\
+-would be good to achieve O(n) time for all values of k\
+\
+
+\f0\b Prune and Search
+\f1\b0 \
+-prune and search or decrease and conquer: how to solve the selection problem in O(n) time\
+-solve a problem that is defined on a collection of n objects by pruning away a fraction of the n objects and then recursively solving a smaller problem\
+-when you have finally reduced the problem to one defined on a constant sized collection of objects, solve the problem using brute force\
+-then complete the construction by returning back from the recursive calls\
+\
+
+\f0\b Randomized Quick Select
+\f1\b0 \
+-randomized quick select: way to apply a prune and search pattern to the selection problem\
+-algorithm runs in O(n) expected time, taken over all possible random choices made by the algorithm\
+-does not depend on any randomness of inputs\
+-O(n**2) is worst case\
+-code p. 572\
+\
+
+\f0\b Analyzing Random Quick Select
+\f1\b0 \
+-linearity of expectation: if X and Y are random variables and c is a number then E(X + Y) = E(X) + E(Y) and E(cX) = cE(X)\
+\
+-expected run time is O(n) assuming two elements of S can be compared in O(1) time\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+	\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+}
