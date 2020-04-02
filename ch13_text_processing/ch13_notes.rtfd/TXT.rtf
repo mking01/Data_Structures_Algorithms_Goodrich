@@ -1,0 +1,360 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2511
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica-Bold;\f1\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\b\fs24 \cf0 Ch. 13 - Text Processing
+\f1\b0 \
+-brute-force method: pattern matching\
+-inefficient but widely applicable\
+-dynamic programming: can be applied in certain settings to solve a problem in polynomial time that appears at first to require exponential time to solve\
+-used for finding partial matches between strings that might be similar but not perfect\
+-greedy method:  allows approximate solutions to hard problems, yields some optimal algorithms\
+\
+
+\f0\b Notations for Strings and the Python Str Class
+\f1\b0 \
+-use character strings as a model for text\
+-rely on indexing and slicing notations\
+-S[j:j] - a null string with length zero\
+-prefix \'97> S[0:k]\
+-suffix \'97> S[j:n]\
+\
+
+\f0\b Pattern Matching Algorithms
+\f1\b0 \
+-pattern matching:  given a text string T of length n and a pattern string P of length m, want to find whether P is a substring of T\
+-T[j:j+m] equals P; find the lowest index j within T at which P begins\
+-inherent to many behaviors of Python\'92s str class\
+-e..g T.find(P), T.index(P), T.count(P)\
+-subtask of more complex behaviors like T.partition(P), T.split(P), T.replace(P,Q)\
+-three pattern matching algorithms - brute force, boyer-moore, knuth-morris-pratt\
+\
+
+\f0\b Brute Force
+\f1\b0 \
+-brute force: when you have something you wish to search for or when you wish to optimize some function\
+-enumerate all possible configurations of inputs involved and pick the best of all these enumerated configurations\
+-to apply, test all possible placements of P relative to T\
+-code p. 584\
+\
+
+\f0\b Performance
+\f1\b0 \
+-worst case:  O(nm) run time\
+-n = outer loop, m = inner loop\
+\
+-visualization:\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-04-02 at 10.29.59 AM.png \width9800 \height5960 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+
+\f0\b Boyer-Moore Algorithm
+\f1\b0 \
+-Boyer-Moore: can sometimes avoid comparisons between P and a sizable fraction of characters in T\
+-main idea is to improve the run time of the brute force algorithm by adding two potentially time-saving heuristics\
+-heuristics are:\
+	1. Looking glass:  when testing a possible placement of P against T, begin comparisons from 	the end of P and move backward to the front of P\
+	2. Character jump: during testing of a possible placement of P within T, a mismatch of text 	character T[I] = c with corresponding pattern character P[k] is handled by\'85.\
+		-if c is not anywhere in P, then shift P completely past T[I] (cannot match any P 		character)\
+		-otherwise, shift P until an occurrence of c in P is aligned with T[I]\
+-they work as an integrated team\
+-looking glass sets up character jump, which allows us to avoid comparisons between P and whole groups of characters in T\
+-we can get to the destination faster by going backwards because if you find a mismatch during the consideration of P at a certain location inT, then avoid lots of needless comparisons\
+-character jump pays off big if it can be applied early in testing a potential placement of P against T\
+-visualization:\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-04-02 at 10.58.26 AM.png \width9240 \height2520 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+-because e is nowhere in the pattern, the entire pattern can be moved forward\
+-second comparison:  also a mismatch but can shift the pattern forward slightly so the last occurrence of \'92s\'92 matches the text string\
+\
+-the efficiency of the Boyer-Moore algorithm relies on creating a lookup table that quickly determines where a mismatched character occurs elsewhere in the pattern\
+-if c is in P, last(c) is the index of the last occurrence of c in P.  Otherwise, last(c) = -1.\
+\
+
+\f0\b Performance
+\f1\b0 \
+-worst case run time is O(nm + |sum|)\
+-unlikely to be reached for English because the algorithm can skip large portions of text\
+\
+
+\f0\b Knuth-Morris-Pratt Algorithm\
+
+\f1\b0 -this KMP algorithm avoids the waste of information (vs. BM method of finding several matching characters but then detecting a mismatch and rejecting)\
+-has a run time of O(n + m) which is optimal\
+-main idea: precompute self-overlaps between portions of the pattern so when a mismatch occurs at one location, we immediately know the maximum amount to shift the pattern before continuing the search\
+-visualization:\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-04-02 at 12.03.51 PM.png \width10240 \height3380 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\
+-if a mismatch occurs at the indicated location, the pattern could be shifted to the second alignment without explicitly rechecking the partial match with the prefix ama\
+\
+
+\f0\b The Failure Function
+\f1\b0 \
+-failure function: indicates the proper shift of P upon a failed comparison\
+-failure function f(k): length of the longest prefix of P that is a suffix of P[1:k+1]\
+-did not start at P[0] because will shift at least one unit\
+-example:\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-04-02 at 12.20.02 PM.png \width8400 \height1540 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\
+-the main part of the KMP algorithm is its while loop\
+-each iteration compares the character at index j in the text (T) and the character at index k in P\
+-if the outcome is a match, the algorithm repeats for the next characters in T and P\
+-if failed, the algorithm looks for the next candidate character in the failure function f(x) or starts over with the next index in T if failing on the first character of the pattern\
+\
+
+\f0\b Constructing the KMP Failure Function
+\f1\b0 \
+-to construct the failure function, code on p.592\
+-bootstrapping process comparing the pattern to itself\
+\
+
+\f0\b Performance
+\f1\b0 \
+-worst case, runs in O(m) time\
+\
+
+\f0\b Dynamic Programming
+\f1\b0 \
+-dynamic programming: applied to a wide variety of problems; used to take problems that seem to require exponential time and produce polynomial times to solve; usually very simple\
+\
+
+\f0\b Matrix Chain-Product
+\f1\b0 \
+-determines the parenthesization of the expression defining product A that minimizes the total number of scalar multiplications performed\
+\
+
+\f0\b Defining Subproblems
+\f1\b0 \
+-one way to solve is to enumerate all possible ways of parenthesizing expression for A and determine number of multiplications performed by each one\
+-the set of all different parenthesizations of the expression for A = the set of all different binary trees that have n leaves\
+-the number is exponential in n\
+-splitting into subproblems improves performance\
+\
+
+\f0\b Characterizing Optimal Solutions
+\f1\b0 \
+-subproblem optimality: characterizing an optimal solution to a particular subproblem in terms of optimal solutions to subproblems\
+-no matter how we parenthesize a subexpression, there has to be some final matrix multiplication performed\
+-for whichever k is correct, one of the products must also be solved optimally\
+\
+
+\f0\b Designing a Dynamic Programming Algorithm
+\f1\b0 \
+-sharing of subproblems: prevents us from dividing the problem into completely independent subproblems (would need divide and conquer for that)\
+-can derive an efficient algorithm by computing Ni, j values bottom up and store intermediate solutions in a table of Ni, j values\
+-apply the general equation to compute Ni, I+1 values \
+-then compute Ni, I + 2 and so on\
+-can build Ni, j values up from previously computed values until you reach the end\
+-code p. 596\
+\
+
+\f0\b Components of a Dynamic Programming Solution
+\f1\b0 \
+-simple subproblems: has to be some way of repeatedly breaking the global optimization problem into subproblems\
+-subproblem optimization: optimal solution to global problem must be a composition of optimal subproblem solutions\
+-subproblem overlap: optimal solutions to unrelated subproblems can contain subproblems in common\
+\
+
+\f0\b Applying Dynamic Programming to the LCS Problem
+\f1\b0 \
+-example p.598\
+\
+
+\f0\b Text Compression and the Greedy Method
+\f1\b0 \
+-text compression: given a string X defined over some alphabet and want to efficiently encode X into a binary string Y (using only 0 and 1)\
+-useful in any situation where we wish to reduce the bandwidth for digital communications\
+-useful for storing large documents more efficiently\
+-Huffman code: saves space over a fixed-length encoding by using short code word strings to encode high frequency characters and long code word strings to encode low frequency characters\
+-frequencies: for each character, c, a count of f(c) of the number of times c appears in the string X\
+-to encode the string X, convert each character in X to a variable-length code word and concatenate all code words to produce the encoding Y for X\
+-no code word in the encoding can be a prefix of another word in the encoding\
+-called a prefix code, used to simplify decoding of y to retrieve X\
+-Huffman\'92s algorithm to produce an optimal variable-length prefix code for X is based on the construction of a binary tree T that represents the code\
+-each edge in T represents a bit in a code word with an edge to a left child representing a \'930\'94 and an edge to a right child representing a \'931\'94\
+-each leaf has a frequency, f(v), which is the frequency in X of the character associated with v\
+-give each internal node v in T a frequency, f(v) that is the sum of the frequencies of all the leaves in the subtree rooted at v\
+-visualization:\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-04-02 at 1.27.00 PM.png \width11620 \height6340 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+
+\f0\b Huffman Coding Algorithm
+\f1\b0 \
+-begins with each of the d distinct characters of string X to encode being the root node of a single-node binary tree\
+-proceeds in a series of rounds\
+-in each round, the algorithm takes the two binary trees with the smallest frequencies and merges them into a single tree\
+-repeats until only one tree is left\
+-each iteration of the while loop in Huffman\'92s algorithm can be implemented in O(log d) time using a priority queue represented with a heap\
+-each iteration takes two nodes out of Q and adds one in until one node is left in Q\
+-runs in O(n + d log d) time\
+\
+
+\f0\b The Greedy Method
+\f1\b0 \
+-greedy method: applied to optimization problems where some structure is being constructed while minimizing or maximizing some property of that structure\
+-general formula for the greedy method pattern is simple\
+-sequence starts from some well-understood starting condition and computes the cost for that condition\
+-it then asks we iteratively make additional choices by identifying the decision that achieves the best cost improvement from all choices currently possible\
+-does not always lead to an optimal solution\
+-the property is a global optimal condition can be reached by a series of locally optimal choices starting from a well-defined start\
+\
+
+\f0\b Tries
+\f1\b0 \
+-tree-based data structure for storing strings in order to support fast pattern matching\
+-main application for tries is in information retrieval\
+-in an information retrieval application, we are given a collection S of strings, all defined using the same alphabet\
+-main operations supported are pattern matching and prefix matching\
+\
+
+\f0\b Standard Tries
+\f1\b0 \
+-standard trie: ordered tree T with the following properties:\
+	-each node of T, except the root, is labeled with a character of sum\
+	-children of an internal node of T have distinct labels\
+	-T has s leaves, each associated with a string of S, such that the concatenation of the labels of 	the nodes on the path from the root to a elif v of T yields the string of S associated with v\
+-on larger datasets, the average degree of nodes is likely to gets smaller at greater depths of the tree because there may be fewer strings sharing the common prefix, and thus fewer continuations of that pattern\
+\
+-important standard trie structural properties:\
+	-height of T is equal to the length of the longest string in S\
+	-every internal node of  has at most |sum| children\
+	-T has s leaves\
+	-number of nodes of T is at most n + 1\
+-worst case number of nodes of a trie occurs when no two strings share a common nonempty prefix\
+-except for the root, all internal nodes have one child\
+\
+-trie T for set S of strings can be used to implement a set or map whose keys are the strings of S\
+-search in T for string X by tracing down from the root the path indicated by characters in X\
+-expect a search for string of length m to run in O(m) time\
+\
+-word matching: can use a trie to determine whether a given pattern matches one of the words of the text exactly\
+-differs from pattern matching because the pattern cannot match an arbitrary substring of the text\
+\
+-to construct a standard trie for a set of S strings, use an incremental algorithm that inserts the strings one at a time\
+-compressed trie: a lot of nodes in the standard trie that have only one child, which is a waste\
+-compressed tries ensure each internal node has at least two children\
+-enforces the rule by compressing chains of single-child nodes into individual edges\
+-let T be a standard trie\
+-an internal node v of T is redundant if v has one child and is not the root\
+-a chain of k >= 2 edges is redundant if:\
+	-vi is redundant for I = 1, \'85, k - 1\
+	-v0 and vk are not redundant\
+-transform T into a compressed trie by replacing each redundant chain of k>=2 into a single edge, relabeling vk with concatenation of the labels of nodes v1, \'85, vk\
+-nodes in a compressed trie are labeled with strings, which are substrings of strings in the collection\
+-advantage vs. standard trie: number of nodes of the compressed trie is proportional to the number of strings and not to their total length\
+-a compressed trie storing a collection S of s strings from an alphabet of size d has the following properties:\
+	-every internal node of T has at least two children and most d children\
+	-T has s leaves nodes\
+	-the number of nodes of T is O(s)\
+-truly advantageous only when it is used as an auxiliary index structure over a collection of strings already stored in a primary structure and is not required to actually store all the characters of the strings in the collection\
+\
+
+\f0\b Suffix Tries
+\f1\b0 \
+-suffix trie: compact representation presented in the previous section can be further simplified; strings in the collection are all suffixes of a string, X\
+\
+
+\f0\b Saving Space
+\f1\b0 \
+-allows us to save space over a standard trie by using several space compression techniques, including those used for the compressed trie\
+-advantage: only takes O(n) space to store\
+\
+
+\f0\b Construction
+\f1\b0 \
+-can construct the suffix trie for a string of length n with an incremental algorithm\
+-takes O(|sum| n**2) time\
+-the compact suffix trie for a string of length n can be constructed in O(n) time with a specialized algorithm\
+-fast construction\
+\
+
+\f0\b Using a Suffix Trie
+\f1\b0 \
+-suffix trie T for a string X can be used to efficiently perform pattern matching queries on text X\
+-can determine whether a pattern P is a substring of X by trying to trace a path associated with P in T\
+-P is a substring of X if such a path can be traced\
+-search down the trie T assumes nodes in T store additional information\
+-property ensures we can easily compute the start index of the pattern in the text\
+\
+
+\f0\b Search Engine Indexing
+\f1\b0 \
+-inverted index / inverted file: storing key-value pairs (w,L) where w is a word and L is a collection of pages containing word w\
+-keys in this dictionary are called index terms\
+-elements in the dictionary are called occurrence lists\
+-implement inverted index with a data structure of 2 qualities:\
+	1. An array storing the occurrence lists of the terms (in no particular order)\
+	2. A compressed trie for the set of index terms, where each leaf stores the index of the 	occurrence list of the associated term\
+-storing occurrence lists outside the trie is to keep the size of the trie data structure sufficiently small to fit in internal memory\
+-when keywords are given and he desired output are the pages containing all the given keywords, we retrieve the occurrence list of each keyword using the trie and return their intersection\
+-each occurrence list should be implemented with a sequence sorted by address or with a map to allow efficient set operations\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+}
