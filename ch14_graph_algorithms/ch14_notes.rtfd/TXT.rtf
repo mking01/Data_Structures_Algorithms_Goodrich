@@ -1,0 +1,600 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2511
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica-Bold;\f1\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\b\fs24 \cf0 Ch. 14 - Graph Algorithms
+\f1\b0 \
+\
+-graph: represents relationships between pairs of objects\
+-set of objects, called vertices, together with a collection of connections between them, called edges\
+-used in mapping, transportation, networks, and engineering\
+\
+- a graph is just a set of vertices and a collection of pairs called edges\
+-it is a way of representing connections or relationships between pairs of objects from some set, V\
+-vertices also called nodes\
+-edges also called arcs\
+-edges are either directed or undirected\
+-an edge is directed from u to v if the pair, (u, v), is ordered, with u preceding v\
+-an edge is undirected if the pair, (u, v) is not ordered\
+-undirected edges are sometimes denoted with set notation \{\}\
+\
+-graphs are typically visualized by drawing the vertices as ovals or rectangles and the edges as segments or curves connecting pairs of ovals and rectangles\
+-if all edges are undirected, then the graph is an undirected graph\
+-if all edges are directed, then the graph is directed (called a digraph)\
+-if both directed and undirected, called a mixed graph\
+-undirected or mixed can be converted into a directed graph by replacing every undirected edge by a pair of directed edges\
+-it\'92s usually useful to preserve as-is\
+\
+-end vertices/endpoints: two vertices joined by an edge\
+-if an edge is directed, its first endpoint is its origin and the other is the destination\
+-two vertices are said to be adjacent if there is an edge whose end vertices are u and v\
+-an edge is incident to a vertex if the vertex is one of the edge\'92s endpoints\
+-outgoing edges: directed edges whose origin is that vertex\
+-incoming edges: directed edges whose destination is that vertex\
+-degree: number of incident edges of v\
+-in-degree: number of edges coming in\
+-out-degree: number of outgoing edges of v\
+\
+-collection: group of edges\
+-allows to undirected edges to have the same end vertices and for two directed edges to have the same origin and same destination\
+-those edges are called parallel edges / multiple edges\
+\
+-self-loop: an edge who connects a vertex to itself (two endpoints coincide)\
+-simple graph: set of vertex pairs\
+\
+-path: sequence of alternating vertices and edges that starts at a vertex and ends at a vertex such that each edge is incident to its predecessor and successor vertex\
+-cycle: a path that starts and ends at the same vertex and includes at least one edge\
+-simple cycle: if each vertex in the cycle is distinct except the first and last one\
+-directed path: all edges are directed and traversed along their direction\
+-directed cycle: \'93similarly defined\'94\
+-acyclic: a directed graph is acyclic if it has no directed cycles\
+\
+-given vertices u and v of a directed graph G, we say u reaches v and v is reachable from u if G has a directed path from u to v\
+-reachability is symmetric \'97> only possible if u reaches v and v reaches u\
+-graph is connected if, for any two vertices, there is a path between them\
+-directed graph G is strongly connected if for any two vertices u and v of G, u reaches v and v reaches u\
+-subgraph: of a graph G is graph H whose vertices and edges are subsets of the vertices and edges of G\
+-spanning subgraph: subgraph of G that contains all vertices of graph G\
+-connected components: if graph G is not connected, its maximal connected subgraphs are called connected components\
+-forest: graph without cycles\
+-tree: connected forest\
+-spanning tree: a spanning subgraph that is a tree\
+\
+-graph properties:\
+	1. A graph has twice the number of edges is twice the number of edges\
+	2. An edge contributes one unit to the out-degree of its origin u and one unit to the in-degree of 	its destination v.  The total contribution of edges to the out-degrees of the vertices = the 	number of edges.  Same for in-degrees.\
+	3. If G is undirected, no two edges can have the same endpoints and there are no self-loops.  	The maximum degree of a vertex in G is n-1.  If G is directed, no two edges can have he same 	origin and destination and there are no self-loops.  The maximum degree of a vertex in G is 	n-1.\
+\
+-let G be an undirected graph with n vertices and m edges.\
+	-if G is connected, then m >= n - 1\
+	-if G is a tree, then m = n - 1\
+	-if G is a forest, then m <= n - 1\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\b \cf0 The Graph ADT
+\f1\b0 \
+-the abstraction is a combination of three types:  vertex, edge, and graph\
+-edge: stores an associated object (flight number, cost, travel distance, etc.)\
+	-supports the following methods:\
+		1. endpoints(): returns tuple of origin and destination vertices\
+		2. opposite(v): return the vertex at the other end of the endpoint\
+-vertex: stores an element provided by the user (e.g. airport code)\
+-a graph can be either undirected or directed\
+-has the following methods:\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-04-03 at 11.49.44 AM.png \width13480 \height9100 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf0 \
+\
+\
+
+\f0\b Data Structures for Graphs
+\f1\b0 \
+-edge list: unordered list of all edges\
+-adjacency list: for each vertex, maintain a separate list containing edges that are incident to the vertex\
+-complete set of edges can be obtained by uniting the adjacency lists\
+-adjacency map: is a secondary container for all edges incident to a vertex organized as a map\
+-allows for access to a specific edge in O(1) expected time\
+-adjacency matrix: worse case O(1) access to a specific edge by maintaining an n x n matrix for a graph with n vertices\
+-each entry stores a reference to an edge\
+\
+
+\f0\b Edge List Structure
+\f1\b0 \
+-simplest representation of a graph (though not most efficient)\
+-all vertex objects stored in an unordered list, V\
+-all edge objects stored in an unordered list, V\
+-example of graph to conversion to list structure:\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-04-03 at 11.55.07 AM.png \width10660 \height5280 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf0 \
+\
+\
+\
+
+\f0\b Vertex Objects
+\f1\b0 \
+-vertex object for a vertex v storing element x has instance variables for:\
+	-a reference to element x\
+	-a reference to the position of the vertex instance in list V, allowing v to be efficiently removed 	from V if it were removed from the graph\
+\
+
+\f0\b Edge Objects
+\f1\b0 \
+-edge object for edge e storing element x has instance variables for:\
+	-reference to element x supporting the element method\
+	-references to the vertex objects associated with the endpoint of vertices of e\
+	-reference to the position of the edge instance in list E, thereby allowing e to be efficiently 	removed from E if it were removed from the graph\
+\
+
+\f0\b Performance of the Edge List Structure\
+
+\f1\b0 -space usage is O(n + m), where n = vertices and m = edges\
+-each individual vertex or edge instance uses O(1) space\
+-additional lists V and E use space proportional to their number of entries\
+\
+
+\f0\b Adjacency List Structure
+\f1\b0 \
+-adjacency list structure: groups edges of a graph by storing them in smaller, secondary containers associated with each individual vertex\
+-incidence collection: a collection for each vertex whose entries are edges incident to v\
+-adjacency list: I(v) for vertex v / incidence collection\
+\
+
+\f0\b Performance of an Adjacency List Structure
+\f1\b0 \
+-space requirements = O(n + m) space, n vertices and m edges\
+-primary vertices list uses O(n) space\
+-sum of lengths of all secondary lists is O(m)\
+\
+
+\f0\b Adjacency Map Structure
+\f1\b0 \
+-secondary incidence collections are implemented as unordered linked lists\
+-adjacency map: let the opposite endpoint of each incident edge serve as a key in the map, with the edge structure serving as the value\
+-improves performance by using a hash-based map to implement I(v) for each vertex\
+-space usage for an adjacency map = O(n + m) still\
+-visualization:\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-04-06 at 9.43.58 AM.png \width10720 \height5300 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf0 \
+\
+
+\f0\b Adjacency Matrix Structure
+\f1\b0 \
+-adjacency matrix structure: augments the edge list structure with matrix A which allows us to locate an edge between a given pair of vertices in worst-case constant time\
+-array A is symmetric if graph G is undirected\
+-in worst case, number of edges in a dense graph will be proportional to n**2\
+-most real-world graphs are sparse\
+-inefficient for sparse graphs\
+-if a graph is dense, constants of proportionality of an adjacency matrix can be smaller than that of an adjacency list or map\
+-if edges do not have auxiliary data, a boolean adjacency matrix can use one bit per edge slot\
+-visualization:\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-04-06 at 9.49.54 AM.png \width9800 \height2420 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf0 \
+\
+
+\f0\b Python Implementation
+\f1\b0 \
+-p. 635-637\
+\
+
+\f0\b Graph Traversals
+\f1\b0 \
+-traversal: systematic procedure for exploring a graph by examining all of its vertices and edges\
+-efficient if it visits all vertices and edges in time proportional to their number (in linear time)\
+-reachability: key to answering how to travel from one vertex to another while following paths of a graph\
+\
+
+\f0\b Depth-First Search
+\f1\b0 \
+-depth-first search: useful for testing whether there is a path from one vertex to another and whether or not a graph is connected\
+-wandering in a maze with a string and not getting list\
+-begin at starting vertex s in G, which we initialize by fixing one end of the string to s and classifying s as visited\
+-s is the current vertex\
+-then traverse G by considering an edge incident to current vertex\
+-if the edge leads to a vertex already visited, ignore that edge\
+-if it leads to an unvisited vertex, then go to v\
+-repeat\
+-continue and backtrack as needed until you find a vertex that has unexplored edges, take one edge, and continue the traversal\
+-process terminates when backtracking leads back to start vertex s and there are no more unexplored edges incident to s\
+\
+
+\f0\b Classifying Graph Edges with DFS
+\f1\b0 \
+-depth-first search tree: rooted at starting vertex s\
+-whenever an edge e is used to discover a new vertex v, edge is known as a discovery edge or tree edge\
+-all other edges that are considered are known as non tree edges, which take us to previously visited vertices\
+-back edge: in the case of undirected graphs, all non tree edges that are explored connect the current vertex to one that is an ancestor of it in the DFS tree\
+-three kinds of non tree edges:\
+	1. Back edges: connect a vertex to an ancestor in the DFS tree\
+	2. Forward edges: connect a vertex to a descendant in the DFS tree\
+	3. Cross edges: connect a vertex to a vertex that is neither its ancestor nor its descendant\
+\
+-visualization:\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-04-06 at 10.14.38 AM.png \width9640 \height13680 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf0 \
+\
+
+\f0\b Properties of a Depth-First Search
+\f1\b0 \
+1. Let G be an undirected graph on which a DFS traversal starting at vertex s has been performed.  Then the traversal visits all vertices in the connected component of s and the discovery edges form a spanning tree of the connected component of s.\
+2. Let G be a directed graph.  Depth-first search on G starting at vertex s visits all vertices of G that are reachable from s.  Also the DFS tree contains directed paths from s to every vertex reachable from s.\
+\
+
+\f0\b Running Time of Depth-First Search
+\f1\b0 \
+-DFS is efficient\
+\
+-code implementation p. 644\
+\
+
+\f0\b Testing for Connectivity\
+
+\f1\b0 -use the basic DFS function to determine whether a graph is connected\
+-in an undirected graph, start a depth-first search at an arbitrary vertex and then test whether len(discovered) = n at the end\
+-if the graph is connected, all vertices will have been discovered\
+-if not connected, at least one vertex that is not reachable and will be discovered\
+-strongly connected: whether for every pair of vertices u and v, both u reaches v and v reaches u\
+\
+
+\f0\b Computing all Connected Components
+\f1\b0 \
+-when a graph is not connected, next goal may be to identify all the connected components of an undirected graph or the strongly connected components of a directed graph\
+-discovery dictionary it returns represents a DFS forest for the entire graph\
+-forest rather than tree because the graph may not be connected\
+-number of connected components can be determined by the number of vertices in the discovery dictionary that have None as their discovery edge\
+-minor modification to the core DFS method could be used to tag each vertex with a component number when it is discovered\
+-a cycle exists if and only if a back edge exists relative to the DFS traversal of that graph\
+-if a back edge exists, a cycle exists by taking the back edge from the descendant to its ancestor and then following the tree edges back to the descendant\
+-if a cycle exists in the graph, there must be a back edge relative to a DFS\
+-when a directed edge is explored leading to a previously visited vertex, must recognize whether that vertex is an ancestor of the current vertex\
+\
+
+\f0\b Breadth-First Search
+\f1\b0 \
+-BFS: another algorithm for traversing a connected component of a graph\
+-sending out in all directions many explorers who collective traverse a graph in a collective fashion (vs. DFS is one person)\
+-proceeds in rounds and subdivides vertices into levels\
+-starts at vertex s which is at level 0\
+-paint as visited all vertices adjacent to the start of vertex s\
+-vertices are one step away from the beginning and placed into level 1\
+-in second round, we allow all explorers to go two steps away from the starting vertex\
+-these new vertices, adjacent to level 1 and not previously assigned to a level, are placed into level 2 and marked as \'93visited\'94\
+-continue until no new vertices are found in a level\
+-visualization:\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-04-06 at 10.46.06 AM.png \width10600 \height15040 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf0 \
+\
+-properties:\
+	1. Let G be an undirected or directed graph on which a BFS traversal starting at vertex s has 	been performed.  Then:\
+		-the traversal visits all vertices that are reachable from s\
+		-for each vertex v at level I, the path of the BFS tree T between s and v has I edges and 		any other path of G from s to v has at least I edges\
+		-if u, v is an edge that is not in the BFS tree, then the level number of v can be at most 1 		greater than the level number of u\
+	2. A BFS traversal of G takes O(n + m) time.\
+\
+
+\f0\b Transitive Closure
+\f1\b0 \
+-graph traversals can be used to answer basic questions of reachability in a directed graph\
+-interested in knowing whether there is a path from vertex u to vertex v in a graph \'97> can perform a DFS or BFS traversal starting at u and observe whether v is discovered\
+-transitive closure: of a directed graph G is itself a directed graph G* such that the vertices of G* are the same vertices of G and G* has an edge (u, v) whenever G has a directed path from u to v\
+-visualization:\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-04-06 at 11.02.14 AM.png \width12960 \height14400 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf0 \
+\
+\
+-python implementation: p. 654\
+\
+
+\f0\b Directed Acyclic Graphs
+\f1\b0 \
+-aka DAGs\
+\
+
+\f0\b Topological Ordering
+\f1\b0 \
+-let G be a directed graph with n vertices\
+-topological ordering of G is an ordering of vertices such that for every edge of G, I < j\
+-aka ordering so that any directed path in G traverses vertices in increasing order\
+-python implementation, p. 657\
+\
+
+\f0\b Performance of Topological Sorting
+\f1\b0 \
+-uses O(n) time\
+-visualization:\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-04-06 at 11.17.13 AM.png \width11660 \height14680 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf0 -label near vertex shows current in count value and its eventual rank in the resulting topological order\
+-highlighted vertex = one with in count equal to zero that will become the next vertex\
+-dashed lines denote edges that have already been examined and which are no longer reflected in the in count values\
+\
+
+\f0\b Shortest Paths
+\f1\b0 \
+-breadth-first search strategy can be used to find a shortest path from some starting vertex to every other vertex\
+-approach makes sense where each edge is as good as any other but there are many situations where this is not appropriate\
+-e.g. some connections are faster than others in a network\
+\
+
+\f0\b Weighted Graphs
+\f1\b0 \
+-weighted graphs have numeric labels associated with each edge, e, called the weight of edge e\
+-example:\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-04-06 at 11.39.37 AM.png \width9820 \height5160 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\b \cf0 Defining Shortest Paths in a Weighted Graph
+\f1\b0 \
+-length: weight of a path is the sum of the edges\
+-distance: vertex u to vertex v in G is the length of a minimum-distance path (shortest path) from u to v if such a path exists\
+-single-source problem based on the greedy method: solve the problem at hand by repeatedly selecting the best choice from among those available in each iteration\
+\
+
+\f0\b Dijkstra\'92s Algorithm
+\f1\b0 \
+-performs a weighted breadth-first search starting at source vertex s\
+-use the greedy method to develop an algorithm that iteratively grows a \'93cloud\'94 of vertices out of s with vertices entering the cloud in order of their distances from s\
+-in each iteration, the next vertex chosen is the vertex outside the cloud that is closest to s\
+-algorithm terminates when no more vertices are outside the cloud, at which point you have the shortest path from s to every vertex of G that is reachable from s\
+\
+
+\f0\b Edge Relaxation
+\f1\b0 \
+-label defined for D[v] for each vertex v in V, use to approximate the distance in G from s to v\
+-D[v] will store the length of the best path so far from s to v\
+-D[s] = 0 and D[v] = infinity for each v != s\
+-in the very first iteration, pull s into set C\
+-once a new vertex u is pulled into C, we then update the label D[v] of each vertex v that is adjacent to u and is outside of C\
+-relaxation procedure: takes an old estimate and checks if it can be improved to get closer to its true value\
+\
+-code p. 662\
+\
+
+\f0\b Comparing the Two Implementations
+\f1\b0 \
+-two choices for implementing the adaptable priority queue with location-aware entries in Dijkstra\'92s algorithm: \
+	1. Heap implementation, run time of O((n + m) log n)\
+	2. Unsorted sequence implementation, run time of O(n**2)\
+\
+-Fibonacci heap: advanced priority queue implementation \
+\
+-code p. 668\
+\
+
+\f0\b Reconstructing the Shortest-Path Tree\
+
+\f1\b0 -shortest-path tree:  collection of all shortest paths emanating from source s\
+-form a rooted tree because if a shortest path from s to v passes through an intermediate vertex u, it must begin with a shortest path from s to u\
+\
+
+\f0\b Minimum Spanning Trees
+\f1\b0 \
+-connect all computers in a new office building using the least amount of cable\
+-model using an undirected, weighted graph G whose vertices represent the computers and whose edges represent all possible pairs of computers\
+-goal: find tree that contains all vertices of G and has the minimum weight over all such trees\
+\
+
+\f0\b Problem Definition
+\f1\b0 \
+-find tree T that contains all vertices in G and minimizes the sum\
+-a tree that contains every vertex of a connected graph G is said to be a spanning tree\
+-minimum spanning tree problem: problem of computing a spanning tree T with the smallest total weight\
+-greedy method: based on choosing objects to join a growing collection by iteratively picking an object that minimizes some cost function\
+\
+
+\f0\b Crucial Fact about Minimum Spanning Rees
+\f1\b0 \
+-two MST algorithms are based on the greedy method\
+-if the weights in G are distinct, the minimum spanning tree is unique\
+\
+
+\f0\b Prim-Jarnik Algorithm
+\f1\b0 \
+-grow a minimum spanning tree from a single cluster starting from some root vertex s\
+-begin with some vertex s, defining the initial \'93cloud\'94 of vertices C\
+-in each iteration, choose a minimum-weight edge connecting a vertex u in the cloud C to a vertex v outside C\
+-vertex v is then brought into the cloud C and the process is repeated until a spanning tree is formed\
+-by always choosing the smallest-weight edge joining a vertex inside C to one outside C, they are assured to always add a valid edge to the MST\
+-to efficiently implement this approach, use Dijkstra\'92s algorithm\
+-maintain a label for each vertex v outside cloud C so D[v] stores the weight of the minimum observed edge for joining v to the cloud C\
+-labels serve as keys in a priority queue used to decide which vertex is next in line to join the cloud\
+\
+
+\f0\b Analyzing Prim-Jarnik
+\f1\b0 \
+-runs in O(n**2) if using an unsorted list as a priority queue\
+-runs in O(m log n) time for a connected graph\
+-runs in O(log n) time for a heap-based priority queue\
+\
+
+\f0\b Kruskal\'92s Algorithm
+\f1\b0 \
+-kruskal\'92s algorithm: constructs minimum spanning trees\
+-maintains a forest of clusters, repeatedly merging pairs of clusters until a single cluster spans the graph\
+-each vertex by itself is a single cluster initially\
+-the algorithm considers each edge, ordered by increasing weight\
+-if edge e connects two different clusters, e is then added to the set of edges of the minimum spanning tree and the two clusters connected by e are merged into a single cluster\
+-if e connects two vertices that are already in the same cluster, e is then discarded\
+-once the algorithm has added enough edges to form a spanning tree, it terminates and outputs the tree as the minimum spanning tree\
+\
+
+\f0\b Running Time of Kruskal\'92s Algorithm 
+\f1\b0 \
+-two primary contributions to Kruskal\'92s algorithm run time:\
+	1. Need to consider the edges in nondecreasing order of their weights\
+	2. Management of the cluster partition\
+-ordering of weights can be implemented in O(m log m) using a sorting algorithm or priority queue\
+-clsuter management can be done through managing disjoint partitions and introducing union-find data structures\
+-perform at most 2m find operations and n-1 union operations\
+-runs in O(m + n log n) time\
+-total time = O(m log n)\
+\
+-p.680\
+\
+
+\f0\b Disjoint Partitions and Union-Find Structures\
+
+\f1\b0 -goal: support the minimum spanning tree algorithm, in which a forest of disjoint trees is maintained, with occasional merging of neighboring trees\
+-groups: clusters of the partition\
+-leader: differentiates between one group and another, assume that at any point in time, each group has a designated entry\
+-partition ADT: using position objects, each of which stores an element x\
+-methods of partition ADT are defined using position objects, each of which stores an element x\
+-following methods supported:\
+	1. make_group(x): 	create a singleton group containing new element x\
+	2. Union(p, q): 		merge groups containing positions p and q\
+	3. find(p): 			return position of the leader of the group containing position p\
+\
+
+\f0\b Sequence Implementation
+\f1\b0 \
+-a simple implementation of a partition with n total elements uses a collection of sequences, one for each group, where sequence for group A stores element positions\
+-each position object stores a variable, element, which references its associated element x and allows the execution of element() method in O(1) time\
+-each position object stores a variable, group, that references the sequence storing p, since this sequence represents the group containing p\'92s element\
+-visualization of sequence-based implementation of a partition with 3 groups:\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 {{\NeXTGraphic Screen Shot 2020-04-06 at 3.10.25 PM.png \width9180 \height4000 \appleattachmentpadding0 \appleembedtype0 \appleaqc
+}¬}\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf0 \
+\
+\
+\
+
+\f0\b A Tree-Based Partition Implementation
+\f1\b0 \
+-uses a collection of trees to store n elements where each tree is associated with a different group\
+-implement each tree with a linked data structure whose nodes are the group position objects\
+-view each position p as being a node having an instance variable, element, referring to its element x, and an instance variable, parent, referring to its parent node\
+-if p is the root of its tree, we set p\'92s parent reference to itself\
+-visualization of a tree-based implementation, p. 683\
+-union-by-size: with each position p, store the number of elements in the subtree rooted at p.  Make the root of the smaller group become a child of the other root\
+-path compression: in a find operation, for each position q that the find visits, reset the parent of q to the root\
+-code p. 685\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+	\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+}
